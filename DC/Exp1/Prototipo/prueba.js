@@ -2,6 +2,10 @@
 var data;
 var ndx;
 var all;
+var dim;
+var grp;
+var dimNew;
+var grpNew;
 
 var data2;
 var ndx2;
@@ -12,6 +16,62 @@ $(document).ready(function(){
     yearChart = dc.pieChart('#year',"chartGroupB");
     var dateFormat = d3.time.format('%Y-%m-%dT%H:%M:%S');
 
+    $("#button").click(function(){
+        if($("li").length!=0){
+            var lista=[]
+
+            $("li").each(function(){
+                lista.push(this.id)
+            })
+            dimNew = ndx.dimension(function(d){
+                if(lista.indexOf(d.key)!=-1){
+                    return d.key
+                }
+            })
+
+            grpNew = dimNew.group().reduceSum(function(d){
+                if(lista.indexOf(d.key)!=-1){
+                    return d.value
+                }
+            });
+
+            StaticChart
+            .width(900)
+            .height(500)
+            .dimension(dimNew)
+            .elasticY(true)
+            .elasticX(true)
+            .group(grpNew)
+            .x(d3.scale.ordinal().domain([""]))
+            .xUnits(dc.units.ordinal)
+            .margins({top: 0, right: 50, bottom: 200, left: 40});
+            StaticChart.on("renderlet", function(chart){
+                chart.selectAll("g.x text").attr("transform","translate(-10, 80) rotate(270)"); 
+            })
+            
+            dc.redrawAll(["chartGroupA"]);
+        }
+    })
+
+    $("#reset").click(function(){
+        
+
+        StaticChart
+        .width(900)
+        .height(500)
+        .dimension(dim)
+        .elasticY(true)
+        .elasticX(true)
+        .group(grp)
+        .x(d3.scale.ordinal().domain([""]))
+        .xUnits(dc.units.ordinal)
+        .margins({top: 0, right: 50, bottom: 200, left: 40});
+        StaticChart.on("renderlet", function(chart){
+            chart.selectAll("g.x text").attr("transform","translate(-10, 80) rotate(270)"); 
+        })
+        
+        dc.redrawAll(["chartGroupA"]);
+    })
 
     $.when(
 		
@@ -22,33 +82,42 @@ $(document).ready(function(){
         })
 		
     ).done(function(){
-    	var dim = ndx.dimension(function(d){
+    	dim = ndx.dimension(function(d){
     		return d.key;
     	})
-		var grp = dim.group().reduceSum(function(d){
+		grp = dim.group().reduceSum(function(d){
 			return d.value
 		});
+
     	StaticChart
-    	.width(990)
-    	.height(990)
+    	.width(900)
+    	.height(500)
     	.dimension(dim)
         .elasticY(true)
         .elasticX(true)
+        .ordering(function(d){console.log(d)})
     	.group(grp)
         .x(d3.scale.ordinal().domain([""]))
-        .xUnits(dc.units.ordinal);
+        .xUnits(dc.units.ordinal)
+        .margins({top: 0, right: 50, bottom: 200, left: 40});
+        StaticChart.on("renderlet", function(chart){
+            chart.selectAll("g.x text").attr("transform","translate(-10, 80) rotate(270)"); 
+        })
         
         $("#chart").click(function(d){
             if(d.target.__data__!=undefined){
                 if(d.target.className.baseVal=="bar selected"){
-                    console.log(d.target.__data__.y)
+                    console.log(d.target.__data__)
+                    $("#list").append('<li id="'+d.target.__data__.x+'">'+d.target.__data__.x+'</li>')
+                }else{
+                    $("#"+d.target.__data__.x).remove()
                 }
             }
         })
         dc.renderAll(["chartGroupA"]);
 
     })
-
+    /*
     $.when(
         // Load agin json file
         
@@ -79,7 +148,7 @@ $(document).ready(function(){
         $("#year").click(function(d){
             console.log(d.target.__data__.data.key)
         })
-    })
+    })*/
 
 });
 /*********************************************************************************************************************************
