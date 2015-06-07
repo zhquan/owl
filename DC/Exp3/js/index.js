@@ -5,9 +5,15 @@ var scmCompany;
 var scmRepo;
 var scmCommit;
 $(document).ready(function(){
+
+    /*************** Divs for DC ***************/
+
     commitsPie = dc.pieChart('#chart1');
     commitsNamePie = dc.pieChart('#chart2');
     repoPie = dc.pieChart('#chart3');
+    table= dc.dataTable('#chart4');
+
+    /*************** Download of JSON ***************/
 
 
     $.when(
@@ -26,11 +32,15 @@ $(document).ready(function(){
 
         
     ).done(function(){
+        /*************** General Data ***************/
         commitsData = dcFormat(scmCommit);
         ndx = crossfilter(commitsData);
         all = ndx.groupAll();
+        /*************** Time format ***************/
 
         var dateFormat = d3.time.format('%Y-%m-%dT%H:%M:%S');
+
+        /*************** Pie charts ***************/
 
         commitsData.forEach(function (element) {
             element.date = dateFormat.parse(element.date);
@@ -81,6 +91,42 @@ $(document).ready(function(){
         .cap(10)
         .legend(dc.legend().x(17).y(3).itemHeight(13).gap(5));
 
+        /*************** Table Chart ***************/
+
+        var nameDim = ndx.dimension(function (d) {
+            return d.name;
+        });
+        table
+            .dimension(nameDim)
+            .group(function (d) {return d.date.getFullYear();})
+            .size(7)
+            .columns([
+                'id',
+                'date',
+                'person_id',
+                'name',
+                {
+                    label: 'Company',
+                    format: function (d) {
+                        return d.company;   
+                    } 
+                },
+                {
+                    label: 'Repository',
+                    format: function (d) {
+                        return d.repo;  
+                    } 
+                }
+            ])
+            .sortBy(function (d) {
+                return d.start;
+            })
+            .order(d3.ascending);
+        table.on('renderlet', function(table) {
+            table.selectAll('.dc-table-group').classed('info', true);
+
+
+        });
 
 
         dc.renderAll();
@@ -89,6 +135,7 @@ $(document).ready(function(){
 
 });
 
+/************* Format **************/
 
 function dcFormat(d){
     var array = [];
