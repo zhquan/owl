@@ -15,6 +15,7 @@ $(document).ready(function(){
     commitsPie = dc.pieChart('#chart1');
     commitsNamePie = dc.pieChart('#chart2');
     repoPie = dc.pieChart('#chart3');
+	allCommits = dc.lineChart('#commitsChart');
     table= dc.dataTable('#chart4');
 
     /*************** Download of JSON ***************/
@@ -54,7 +55,7 @@ $(document).ready(function(){
 
         commitsData.forEach(function (element) {
             element.date = dateFormat.parse(element.date);
-
+			element.month = d3.time.month(element.date);
         });
 
         var dim = ndx.dimension(function(d){
@@ -145,6 +146,28 @@ $(document).ready(function(){
 
         });
 
+		var monthDim = ndx.dimension(function(d){
+			return d.month;
+		});
+
+		var commitGrp = monthDim.group();
+		
+
+		allCommits
+		    .renderArea(true)
+		    .width(990)
+		    .height(300)
+		    .transitionDuration(1000)
+		    .margins({top: 30, right: 50, bottom: 25, left: 50})
+		    .dimension(monthDim)
+		    .x(d3.time.scale().domain([new Date(2010, 0, 1), new Date(2015, 11, 31)]))
+        	.round(d3.time.month.round)
+        	.xUnits(d3.time.months)
+			.elasticY(true)
+		    .renderHorizontalGridLines(true)
+		    .legend(dc.legend().x(800).y(10).itemHeight(13).gap(5))
+		    .brushOn(true)
+		    .group(commitGrp, 'Commit');
 
         dc.renderAll();
 
