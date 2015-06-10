@@ -1,3 +1,6 @@
+var allCommits;
+var allSliderCommits;
+
 var commitsPie;
 var commitsData;
 
@@ -16,6 +19,7 @@ $(document).ready(function(){
     commitsNamePie = dc.pieChart('#chart2');
     repoPie = dc.pieChart('#chart3');
 	allCommits = dc.lineChart('#commitsChart');
+	allSliderCommits = dc.barChart('#commitsSliderChart');
     table= dc.dataTable('#chart4');
 
     /*************** Download of JSON ***************/
@@ -160,6 +164,7 @@ $(document).ready(function(){
 		    .transitionDuration(1000)
 		    .margins({top: 30, right: 50, bottom: 25, left: 50})
 		    .dimension(monthDim)
+		    .rangeChart(allSliderCommits)
 		    .x(d3.time.scale().domain([new Date(2010, 0, 1), new Date(2015, 11, 31)]))
         	.round(d3.time.month.round)
         	.xUnits(d3.time.months)
@@ -168,6 +173,19 @@ $(document).ready(function(){
 		    .legend(dc.legend().x(800).y(10).itemHeight(13).gap(5))
 		    .brushOn(true)
 		    .group(commitGrp, 'Commit');
+		allSliderCommits
+			.width(990).height(40)
+			.margins({top: 0, right: 50, bottom: 20, left: 50})
+            .dimension(monthDim)
+            .group(commitGrp)
+			.centerBar(true)
+			.gap(1)
+			.x(d3.time.scale().domain([new Date(2010, 0, 1), new Date(2015, 11, 31)]))
+        	.round(d3.time.month.round)
+        	.xUnits(d3.time.months)
+			.brushOn(true)
+			.alwaysUseRounding(true);
+		allSliderCommits.yAxis().tickFormat(function(d) {return ''});
 
         dc.renderAll();
 
