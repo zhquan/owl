@@ -159,11 +159,20 @@ $(document).ready(function(){
 
 		var commitGrp = monthDim.group();
 		
+        /***************Count****************/
+
+        dc.dataCount('.dc-data-count')
+            .dimension(ndx)
+            .group(all)
+            .html({
+                some:'<strong>%filter-count</strong> commits from <strong>%total-count</strong>',
+                all:'<strong>%filter-count</strong> commits from <strong>%total-count</strong>'
+            });
 
 		allCommits
 		    .renderArea(true)
-		    .width(990)
-		    .height(300)
+		    .width(1450)
+		    .height(200)
 		    .transitionDuration(1000)
 		    .margins({top: 30, right: 50, bottom: 25, left: 50})
 		    .dimension(monthDim)
@@ -177,7 +186,7 @@ $(document).ready(function(){
 		    .brushOn(true)
 		    .group(commitGrp, 'Commit');
 		allSliderCommits
-			.width(990).height(40)
+			.width(1200).height(40)
 			.margins({top: 0, right: 50, bottom: 20, left: 50})
             .dimension(monthDim)
             .group(commitGrp)
