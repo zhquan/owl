@@ -146,7 +146,10 @@ $(document).ready(function(){
             .order(d3.ascending);
         table.on('renderlet', function(table) {
             table.selectAll('.dc-table-group').classed('info', true);
-
+            table.selectAll(".dc-table-column._2").on("click", function(d){
+                commitsNamePie.filter(d.name)
+                dc.redrawAll();
+            });
 
         });
 
