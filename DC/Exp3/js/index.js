@@ -4,6 +4,10 @@ var commitsData;
 var scmCompany;
 var scmRepo;
 var scmCommit;
+
+var companies=[];
+var repos=[]
+var users=[]
 $(document).ready(function(){
 
     /*************** Divs for DC ***************/
@@ -20,10 +24,16 @@ $(document).ready(function(){
 
         $.getJSON('json/scm-companies.json', function (d) {
             scmCompany = d;
+            d.values.forEach(function(element){
+                companies.push(element[1])
+            })
         }),
 
         $.getJSON('json/scm-repos.json', function (d) {
             scmRepo = d;
+            d.values.forEach(function(element){
+                repos.push(element[1])
+            })
         }),
 
         $.getJSON('json/scm-commits-distinct.json', function (d) {
@@ -51,7 +61,6 @@ $(document).ready(function(){
             return d.company;
         })
 
-
         var grp = dim.group()
 
         commitsPie
@@ -65,6 +74,10 @@ $(document).ready(function(){
 
         var dim2 = ndx.dimension(function(d){
             return d.name;
+        })
+
+        dim2.group().all().forEach(function(element){
+            users.push(element.key)
         })
 
         var grp2 = dim2.group()
@@ -102,8 +115,12 @@ $(document).ready(function(){
             .size(7)
             .columns([
                 'id',
-                'date',
-                'person_id',
+                {
+                label: 'Date',
+                    format: function(d){
+                        return String(d.date).substr(0, 15);
+                    }
+                },
                 'name',
                 {
                     label: 'Company',
@@ -130,6 +147,51 @@ $(document).ready(function(){
 
 
         dc.renderAll();
+
+        $(".companiesInput").autocomplete({
+            source:companies
+        });
+
+        $(".developersInput").autocomplete({
+            source:users
+        });
+
+        $(".reposInput").autocomplete({
+            source:repos
+        });
+
+        $('.companiesInput').keyup(function(e){
+            if(e.keyCode == 13)
+            {
+                var company=this.value;
+                this.value=""
+                commitsPie.filter(company)
+                dc.redrawAll();
+            }
+
+        });
+
+        $('.developersInput').keyup(function(e){
+            if(e.keyCode == 13)
+            {
+                var company=this.value;
+                this.value=""
+                commitsNamePie.filter(company)
+                dc.redrawAll();
+            }
+
+        });
+
+        $('.reposInput').keyup(function(e){
+            if(e.keyCode == 13)
+            {
+                var company=this.value;
+                this.value=""
+                repoPie.filter(company)
+                dc.redrawAll();
+            }
+
+        });
 
     })
 
@@ -163,4 +225,8 @@ function dcFormat(d){
         array.push(dic);
     });
     return array;
+}
+
+function filterByText(){
+    alert("hola")
 }
