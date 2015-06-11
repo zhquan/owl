@@ -183,8 +183,10 @@ $(document).ready(function(){
             .dimension(ndx)
             .group(all)
             .html({
-                some:'<strong>%filter-count</strong> commits from <strong>%total-count</strong>',
-                all:'<strong>%filter-count</strong> commits from <strong>%total-count</strong>'
+                some:'<strong>%filter-count</strong> commits from <strong>%total-count</strong>'+
+                ' | <button onclick="Reset()">Reset All</button>',
+                all:'<strong>%filter-count</strong> commits from <strong>%total-count</strong>'+
+                ' | <button onclick="Reset()">Reset All</button'
             });
 
 		allCommits
