@@ -70,10 +70,11 @@ $(document).ready(function(){
 
         commitsPie
         .width(472)
-        .height(200)
+        .height(270)
         .dimension(dim)
         .group(grp)
-        .cap(10)
+        .cx(300)
+        .cap(14)
         .legend(dc.legend().x(17).y(3).itemHeight(13).gap(5));;
 
 
@@ -89,10 +90,11 @@ $(document).ready(function(){
 
         commitsNamePie
         .width(472)
-        .height(200)
+        .height(270)
         .dimension(dim2)
         .group(grp2)
-        .cap(10)
+        .cx(300)
+        .cap(14)
         .legend(dc.legend().x(17).y(3).itemHeight(13).gap(5));
 
         var dim3 = ndx.dimension(function(d){
@@ -103,10 +105,11 @@ $(document).ready(function(){
 
         repoPie
         .width(472)
-        .height(200)
+        .height(270)
         .dimension(dim3)
         .group(grp3)
-        .cap(10)
+        .cap(14)
+        .cx(300)
         .legend(dc.legend().x(17).y(3).itemHeight(13).gap(5));
 
         /*************** Table Chart ***************/
@@ -280,6 +283,7 @@ function dcFormat(d){
     return array;
 }
 
-function filterByText(){
-    alert("hola")
+function Reset(){
+    dc.filterAll();
+    dc.redrawAll();
 }
