@@ -154,6 +154,21 @@ $(document).ready(function(){
                 dc.redrawAll();
             });
 
+			$(window).bind('scroll', function(){
+				if($(this).scrollTop() == ($('body').outerHeight() - $(window).innerHeight())) {
+				    var size = table.size();
+					var numero = $('.dc-data-count.dc-chart').html().split('<strong>')[1].split('</strong>')[0];
+					var total = parseInt(numero);
+					if (numero.split(',')[1] != undefined){
+						total = parseInt(numero.split(',')[0]+numero.split(',')[1]);
+					}
+					if (size < total){
+						table.size(size+5);
+						dc.redrawAll();
+					}
+				}
+			});
+
         });
 
 		var monthDim = ndx.dimension(function(d){
