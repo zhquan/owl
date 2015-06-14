@@ -9,6 +9,8 @@ var scmRepo;
 var scmCommit;
 
 var companies=[];
+var companiesLook={}
+companiesLook["array"]=[]
 var repos=[]
 var users=[]
 $(document).ready(function(){
@@ -30,7 +32,8 @@ $(document).ready(function(){
         $.getJSON('json/scm-companies.json', function (d) {
             scmCompany = d;
             d.values.forEach(function(element){
-                companies.push(element[1])
+                companiesLook["array"].push(element[1])
+                companiesLook[element[0]]=element[1]
             })
         }),
 
@@ -222,7 +225,7 @@ $(document).ready(function(){
         dc.renderAll();
 
         $(".companiesInput").autocomplete({
-            source:companies
+            source:companiesLook["array"]
         });
 
         $(".developersInput").autocomplete({
@@ -286,14 +289,7 @@ function dcFormat(d){
         dic[names[5]] = val[5];
         dic[names[6]] = val[6];
         dic[names[7]] = val[7];
-
-        if (val[4] == 261){
-            dic['company'] = 'No Company';
-        } else if (val[4] > 261){
-            dic['company'] = scmCompany['values'][val[4]-2][1];
-        } else {
-            dic['company'] = scmCompany['values'][val[4]-1][1];
-        }
+        dic['company'] = companiesLook[val[4]];
         dic['repo'] = scmRepo['values'][val[5]-1][1];
         array.push(dic);
     });
