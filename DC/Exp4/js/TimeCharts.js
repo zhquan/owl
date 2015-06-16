@@ -12,7 +12,7 @@ function Time(){
 
 	allCommits
 	    .renderArea(true)
-	    .width(750)
+	    .width(700)
 	    .height(200)
 	    .transitionDuration(1000)
 	    .margins({top: 30, right: 50, bottom: 25, left: 50})
@@ -28,7 +28,7 @@ function Time(){
 	    .group(commitGrp, 'Commit');
 
 	allSliderCommits
-		.width(750).height(40)
+		.width(700).height(40)
 		.margins({top: 0, right: 50, bottom: 20, left: 50})
         .dimension(monthDim)
         .group(commitGrp)
