@@ -23,20 +23,20 @@ function Pies(){
         if(filter!="Others"){
             if(filter.constructor==Array){
                 filter[0].forEach(function(element){
-                    if(compFilters.indexOf(element)!=-1){
-                        $("#filterComp").append('<div id="filter-'+element+'">'+element+'</div>')
+                    if(compFilters.indexOf(element)==-1){
+                        $("#filterComp").append('<div id="filter-'+element.replaceAll(" ","0").replaceAll(".","0").replaceAll(",","0").replaceAll("(","0").replaceAll(")","0").replaceAll("?","0").replaceAll("'","0").replaceAll("@","0")+'">'+element+'</div>')
                         compFilters.push(element)
                     }else{
-                        $('#filter-'+element).remove()
+                        $('#filter-'+(element.replaceAll(" ","0").replaceAll(".","0").replaceAll(",","0").replaceAll("(","0").replaceAll(")","0").replaceAll("?","0").replaceAll("'","0").replaceAll("@","0"))).remove()
                         compFilters.splice(compFilters.indexOf(element),1)
                     }
                 })
             }else{
-                if(compFilters.indexOf(filter)!=-1){
-                    $("#filterComp").append('<div id="filter-'+filter+'">'+filter+'</div>')
+                if(compFilters.indexOf(filter)==-1){
+                    $("#filterComp").append('<div id="filter-'+filter.replaceAll(" ","0").replaceAll(".","0").replaceAll(",","0").replaceAll("(","0").replaceAll(")","0").replaceAll("?","0").replaceAll("'","0").replaceAll("@","0")+'">'+filter+'</div>')
                     compFilters.push(filter)
                 }else{
-                    $('#filter-'+filter).remove()
+                    $('#filter-'+(filter.replaceAll(" ","0").replaceAll(".","0").replaceAll(",","0").replaceAll("(","0").replaceAll(")","0").replaceAll("?","0").replaceAll("'","0").replaceAll("@","0"))).remove()
                     compFilters.splice(compFilters.indexOf(filter),1)
                 }
             }              
@@ -65,12 +65,25 @@ function Pies(){
 
     commitsNamePie.on("filtered", function(chart,filter) {
         if(filter!="Others"){
-            deveFilters.push(filter)
-            if($("#filterDeve").text()==""){
-                $("#filterDeve").append(filter)
+            if(filter.constructor==Array){
+                filter[0].forEach(function(element){
+                    if(deveFilters.indexOf(element)==-1){
+                        $("#filterDeve").append('<div id="filter-'+element.replaceAll(" ","0").replaceAll(".","0").replaceAll(",","0").replaceAll("(","0").replaceAll(")","0").replaceAll("?","0").replaceAll("'","0").replaceAll("@","0")+'">'+element+'</div>')
+                        deveFilters.push(element)
+                    }else{
+                        $('#filter-'+(element.replaceAll(" ","0").replaceAll(".","0").replaceAll(",","0").replaceAll("(","0").replaceAll(")","0").replaceAll("?","0").replaceAll("'","0").replaceAll("@","0"))).remove()
+                        deveFilters.splice(deveFilters.indexOf(element),1)
+                    }
+                })
             }else{
-                $("#filterDeve").append(","+filter)
-            }
+                if(deveFilters.indexOf(filter)==-1){
+                    $("#filterDeve").append('<div id="filter-'+filter.replaceAll(" ","0").replaceAll(".","0").replaceAll(",","0").replaceAll("(","0").replaceAll(")","0").replaceAll("?","0").replaceAll("'","0").replaceAll("@","0")+'">'+filter+'</div>')
+                    deveFilters.push(filter)
+                }else{
+                    $('#filter-'+(filter.replaceAll(" ","0").replaceAll(".","0").replaceAll(",","0").replaceAll("(","0").replaceAll(")","0").replaceAll("?","0").replaceAll("'","0").replaceAll("@","0"))).remove()
+                    deveFilters.splice(deveFilters.indexOf(filter),1)
+                }
+            }              
         }
     });
 
@@ -90,13 +103,27 @@ function Pies(){
     .legend(dc.legend().x(17).y(3).itemHeight(13).gap(5));
 
     repoPie.on("filtered", function(chart,filter) {
+
         if(filter!="Others"){
-            compFilters.push(filter)
-            if($("#filterRepo").text()==""){
-                $("#filterRepo").append(filter)
+            if(filter.constructor==Array){
+                filter[0].forEach(function(element){
+                    if(compFilters.indexOf(element)==-1){
+                        $("#filterRepo").append('<div id="filter-'+element.replaceAll(" ","0").replaceAll(".","0").replaceAll(",","0").replaceAll("(","0").replaceAll(")","0").replaceAll("?","0").replaceAll("'","0").replaceAll("@","0")+'">'+element+'</div>')
+                        compFilters.push(element)
+                    }else{
+                        $('#filter-'+(element.replaceAll(" ","0").replaceAll(".","0").replaceAll(",","0").replaceAll("(","0").replaceAll(")","0").replaceAll("?","0").replaceAll("'","0").replaceAll("@","0"))).remove()
+                        compFilters.splice(compFilters.indexOf(element),1)
+                    }
+                })
             }else{
-                $("#filterRepo").append(","+filter)
-            }
+                if(compFilters.indexOf(filter)==-1){
+                    $("#filterRepo").append('<div id="filter-'+filter.replaceAll(" ","0").replaceAll(".","0").replaceAll(",","0").replaceAll("(","0").replaceAll(")","0").replaceAll("?","0").replaceAll("'","0").replaceAll("@","0")+'">'+filter+'</div>')
+                    compFilters.push(filter)
+                }else{
+                    $('#filter-'+(filter.replaceAll(" ","0").replaceAll(".","0").replaceAll(",","0").replaceAll("(","0").replaceAll(")","0").replaceAll("?","0").replaceAll("'","0").replaceAll("@","0"))).remove()
+                    compFilters.splice(compFilters.indexOf(filter),1)
+                }
+            }              
         }
     });
 
