@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+	<!-- CSS -->
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="css/jquery-ui.custom.min.css">
+    <link rel="stylesheet" type="text/css" href="css/dc.css"/>
+	<link rel="stylesheet" type="text/css" href="css/index.css"/>
+
+	<!-- JavaScrip -->
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="js/d3.js"></script>
+    <script type="text/javascript" src="js/crossfilter.js"></script>
+    <script type="text/javascript" src="js/dc.js"></script>
+    <script type="text/javascript" src="js/colorbrewer.js"></script>
+
+    <!-- External Scripts -->
+    <script type="text/javascript" src="js/index.js"></script>
+    <script type="text/javascript" src="js/PiesCharts.js"></script>
+    <script type="text/javascript" src="js/TablesCharts.js"></script>
+    <script type="text/javascript" src="js/TimeCharts.js"></script>
+
+
+
+</head>
+    <body>
+		<div id="chart5" class="dc-data-count" style="margin-left:5%;position: fixed;background:white;"></div>
+		<br><br>
+        <a style="margin-left:5%;margin-right:10%">Repositories</a>
+        <a style="margin-left:15%;margin-right:15%">Developers</a>
+        <a style="margin-left:15%;margin-right:15%">Companies</a>
+
+        <div>
+            <input class="reposInput" style="margin-left:5%">
+            <input class="developersInput" style="margin-left:15%"> 
+            <input class="companiesInput" style="margin-left:20%"> 
+        </div>
+        <div style=" margin-top:2%">
+            <a id="chart3" class="pieChart"></a>
+            <a id="chart2" class="pieChart"></a>
+            <a id="chart1" class="pieChart"></a>
+        </div>
+        <div>
+        <table style="border: 1px solid black;margin:3%">
+   
+            <tr style="border: 1px solid black">
+                <td width="25%" style="border: 1px solid black">
+            		<div id="commitsChart"></div>
+            		<div id="commitsSliderChart"></div>
+                </td>
+            
+                <td style="border: 1px solid black">
+                    <th style="border: 1px solid black">Repositories:</th>
+                    <th style="border: 1px solid black">Developers:</th>
+                    <th style="border: 1px solid black">Companies:</th>
+                </td>
+
+            </tr>
+          
+        </table>
+        </div>
+        <div style=" margin-top:3%; margin-left:10%">
+            <a id="chart4" style="margin-left:5%" class="table table-hover dc-data-table"></a>
+            <a id="chart6" style="margin-left:5%" class="table table-hover dc-data-table"></a>
+            <a id="chart7" style="margin-left:5%" class="table table-hover dc-data-table"></a>
+        </div>
+
+    </body>
+</html>
