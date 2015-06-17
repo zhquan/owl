@@ -8,6 +8,20 @@ var scmCompany;
 var scmRepo;
 var scmCommit;
 
+var table;
+var tableRepo;
+var tableOrg;
+var tableAuth;
+var repoDim;
+var repoGrp;
+var orgDim;
+var orgGrp;
+var authDim;
+var authGrp;
+var repo = [];
+var org = [];
+var auth = [];
+
 var companies=[];
 var companiesLook={}
 companiesLook["array"]=[]
@@ -69,6 +83,35 @@ $(document).ready(function(){
     
 
         /*************** Table Chart ***************/
+		repo = [];
+		repoDim = ndx.dimension(function (d) {
+			if (repo.indexOf(d.repo) == -1) {
+				repo.push(d.repo);
+			}
+			var i = repo.indexOf(d.repo);
+		    return repo[i];
+		});
+		repoGrp = repoDim.group();
+
+		org = [];
+		orgDim = ndx.dimension(function (d) {
+			if (org.indexOf(d.company) == -1) {
+				org.push(d.company);
+			}
+			var i = org.indexOf(d.company);
+		    return org[i];
+		});
+		orgGrp = orgDim.group();
+
+		auth = [];
+		authDim = ndx.dimension(function (d) {
+			if (auth.indexOf(d.name) == -1) {
+				auth.push(d.name);
+			}
+			var i = auth.indexOf(d.name);
+		    return auth[i];
+		});
+		authGrp = authDim.group();
 
         Tables()
 
@@ -167,6 +210,33 @@ function dcFormat(d){
 
 function Reset(){
     dc.filterAll();
+	var order = -1;
+	var order2 = -1;
+	tableRepo
+        .dimension(repoDim)
+        .group(function (d) {return "";})
+        .size(7)
+        .columns([
+            {
+            	label: 'Repositories',
+                format: function(d){
+					order++;
+					return repoGrp.top(Infinity)[order].key;
+                }
+            },
+            {
+            	label: 'Commits',
+                format: function(d){
+					order2++;
+					return repoGrp.top(Infinity)[order2].value;
+                }
+            }
+        ]);
+
+	tableRepo.on('renderlet', function(table) {
+        tableAuth.selectAll('.dc-table-group').classed('info', true);
+    });
+	dc.renderAll();
     dc.redrawAll();
-    dc.renderAll();
+    
 }

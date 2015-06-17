@@ -1,25 +1,16 @@
 function Tables(){
 
 	
-	var tableRepo = dc.dataTable('#tableRepo');
-    var tableOrg = dc.dataTable('#tableOrg');
-    var table = dc.dataTable('#table');
-	var tableAuth = dc.dataTable('#tableAuth');
+	tableRepo = dc.dataTable('#tableRepo');
+    tableOrg = dc.dataTable('#tableOrg');
+    table = dc.dataTable('#table');
+	tableAuth = dc.dataTable('#tableAuth');
 
     var nameDim = ndx.dimension(function (d) {
-            return d.name;
+        return d.name;
     });
 
 /********************************************************** Table Repo ********************************************************/
-	var repo = [];
-	var repoDim = ndx.dimension(function (d) {
-		if (repo.indexOf(d.repo) == -1) {
-			repo.push(d.repo);
-		}
-		var i = repo.indexOf(d.repo);
-        return repo[i];
-    });
-	var repoGrp = repoDim.group();
 	var order = -1;
 	var order2 = -1;
     tableRepo
@@ -105,6 +96,7 @@ function Tables(){
 					table.size(size+5);
 					var sizeRepo = size;
 					var sizeOrg = size;
+					var sizeAuth = size;
 					if ((size+5) < repoGrp.top(Infinity).length-1){
 						sizeRepo = size+5;
 					} else {
@@ -146,7 +138,7 @@ function Tables(){
 					tableOrg
 						.dimension(orgDim)
 						.group(function (d) {return '';})
-						.size(sizeRepo)
+						.size(sizeOrg)
 						.columns([
 							{
 								label: 'Organizations',
@@ -174,7 +166,7 @@ function Tables(){
 					tableAuth
 						.dimension(orgDim)
 						.group(function (d) {return '';})
-						.size(sizeRepo)
+						.size(sizeAuth)
 						.columns([
 							{
 								label: 'Authors',
@@ -199,17 +191,9 @@ function Tables(){
 
 /********************************************************** Tabla Org ********************************************************/
 
-	var org = [];
-	var orgDim = ndx.dimension(function (d) {
-		if (org.indexOf(d.company) == -1) {
-			org.push(d.company);
-		}
-		var i = org.indexOf(d.company);
-        return org[i];
-    });
-	var orgGrp = orgDim.group();
-	order = -1;
-	order2 = -1;
+	
+	var orderOrgKey = -1;
+	var orderOrgVal = -1;
     tableOrg
         .dimension(orgDim)
         .group(function (d) {return '';})
@@ -218,15 +202,15 @@ function Tables(){
             {
             label: 'Organizations',
                 format: function(d){
-                    order++;
-					return orgGrp.top(Infinity)[order].key;
+                    orderOrgKey++;
+					return orgGrp.top(Infinity)[orderOrgKey].key;
                 }
             },
             {
                 label: 'Commits',
                 format: function (d) {
-                    order2++;
-					return orgGrp.top(Infinity)[order2].value;
+                    orderOrgVal++;
+					return orgGrp.top(Infinity)[orderOrgVal].value;
                 }
             }
         ]);
@@ -241,15 +225,6 @@ function Tables(){
 
 /********************************************************** Table Auth ********************************************************/
 
-	var auth = [];
-	var authDim = ndx.dimension(function (d) {
-		if (auth.indexOf(d.name) == -1) {
-			auth.push(d.name);
-		}
-		var i = auth.indexOf(d.name);
-        return auth[i];
-    });
-	var authGrp = authDim.group();
 	var authOrderKey = -1;
 	var authOrderVal = -1;
 
