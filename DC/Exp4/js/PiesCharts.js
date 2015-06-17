@@ -20,7 +20,10 @@ function Pies(){
     .legend(dc.legend().x(17).y(3).itemHeight(13).gap(5));
 
     compPie.on("filtered", function(chart,filter) {
-        if(filter!="Others"){
+        if(filter==null){
+            compFilters=[]
+            $("#filterComp").empty()
+        }else if(filter!="Others"){
             if(filter.constructor==Array){
                 filter[0].forEach(function(element){
                     if(compFilters.indexOf(element)==-1){
@@ -64,7 +67,10 @@ function Pies(){
     .legend(dc.legend().x(17).y(3).itemHeight(13).gap(5));
 
     commitsNamePie.on("filtered", function(chart,filter) {
-        if(filter!="Others"){
+        if(filter==null){
+            deveFilters=[]
+            $("#filterDeve").empty()
+        }else if(filter!="Others"){
             if(filter.constructor==Array){
                 filter[0].forEach(function(element){
                     if(deveFilters.indexOf(element)==-1){
@@ -103,8 +109,10 @@ function Pies(){
     .legend(dc.legend().x(17).y(3).itemHeight(13).gap(5));
 
     repoPie.on("filtered", function(chart,filter) {
-
-        if(filter!="Others"){
+        if(filter==null){
+            compFilters=[]
+            $("#filterRepo").empty()
+        }else if(filter!="Others"){
             if(filter.constructor==Array){
                 filter[0].forEach(function(element){
                     if(compFilters.indexOf(element)==-1){
