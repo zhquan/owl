@@ -32,7 +32,7 @@
   <body>
     <div class="container-fluid">
       <div class="row" style="position: fixed;background:#eee; width: 100%;z-index:1000;">
-        <div class="col-md-4">
+        <div class="col-md-3">
           <div id="chart5" style="margin-top: 0px; float:none;" class="dc-data-count"></div>
         </div>
         <div class="col-md-2">
@@ -47,9 +47,43 @@
         <div class="col-md-2">
           <div><b>Range:</b><span id="filterFrom">  2012-1-1 //</span><span id="filterTo"> 2015-12-31 </span></div>
         </div>
+        <div class="col-md-1">
+          <button class="btn btn-default btn-sm" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+            Help
+          </button>
+        </div>
       </div>
 
       <div class="row" style="padding-top: 70px;">
+        <div class="col-md-12 collapse" id="collapseExample">
+          <div class="well">
+            <p>This panel is showing all commits for the analyzed projects.</p>
+            <p>The pies on the top show number of commits per repository, organization
+              and author, as a fraction of the total number of commits.</p>
+            <p>The time chart below shows number of commits per month for the duration of the project.</p>
+            <p>The tables at the bottom show lists of commits, repositories,
+              organizations and authors (in the last three cases, sorted by number of
+              commits). The tables actually show only the first entries in the
+              corresponding list: scroll down to see more entries.</p>
+            <p>The data shown in pies, time charts and tables is defined by the current
+              filters, which are displayed on the top. By default, all data is shown.
+              By clicking on sectors in pies, and by selecting and dragging in the
+              time list, filters on data are defined, and data shown is automatically
+              redisplayed.</p>
+            <p>You can select one or more sectors in the same or different pies, with
+              the effect of selecting data matching all sectors. To select a date
+              period, click and drag the pointer on the time chart. When you want to
+              come back to select all data, just click on "reset filters", on the top.</p>
+              <p>Enjoy!</p>
+              <button class="btn btn-default btn-sm" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                Hide
+              </button>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="row">
         <div class="col-md-4 text-center">
               <form class="form-inline" style="margin-bottom: 3%;">
                 <label for="reposInput">Repositories</label>
@@ -66,8 +100,8 @@
             </div>
             <div class="col-md-4 text-center">
               <form class="form-inline" style="margin-bottom: 3%;">
-                <label for="companiesInput">Developers</label>
-                <input class="companiesInput form-control" id="companiesInput" type="text" placeholder="company">
+                <label for="companiesInput">Organizations</label>
+                <input class="companiesInput form-control" id="companiesInput" type="text" placeholder="organization">
               </form>
               <div id="chart1" class="pieChart"></div>
             </div>
