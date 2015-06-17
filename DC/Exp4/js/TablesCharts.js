@@ -1,35 +1,46 @@
 function Tables(){
 
-	table= dc.dataTable('#chart4');
-    table2= dc.dataTable('#chart6');
-    table3= dc.dataTable('#chart7');
+	table= dc.dataTable('#tableRepo');
+    table2= dc.dataTable('#tableOrg');
+    table3= dc.dataTable('#tableAuth');
 
     var nameDim = ndx.dimension(function (d) {
             return d.name;
     });
 
+	var repo = [];
+	var repoDim = ndx.dimension(function (d) {
+		if (repo.indexOf(d.repo) == -1) {
+			repo.push(d.repo);
+		}
+		var i = repo.indexOf(d.repo);
+        return repo[i];
+    });
+	var repoGrp = repoDim.group();
+	var order = -1;
+	var order2 = -1;
+console.log(repo)
+console.log(repoGrp.top(Infinity))
     table
-        .dimension(nameDim)
-        .group(function (d) {return d.date.getFullYear();})
+        .dimension(repoDim)
+        .group(function (d) {return "";})
         .size(7)
         .columns([
-            'id',
             {
-            label: 'Date',
+            	label: 'Repositories',
                 format: function(d){
-                    return String(d.date).substr(0, 15);
+					order++;
+					return repoGrp.top(Infinity)[order].key;
                 }
             },
             {
-                label: 'Repository',
-                format: function (d) {
-                    return d.repo;  
-                } 
+            	label: 'Commits',
+                format: function(d){
+					order2++;
+					return repoGrp.top(Infinity)[order2].value;
+                }
             }
         ])
-        .sortBy(function (d) {
-            return d.start;
-        })
         .order(d3.ascending);
 
     table.on('renderlet', function(table) {
@@ -41,14 +52,44 @@ function Tables(){
 
 		$(window).bind('scroll', function(){
 			if($(this).scrollTop() == ($('body').outerHeight() - $(window).innerHeight())) {
-			    var size = table.size();
+			    var size = table2.size();
 				var numero = $('.dc-data-count.dc-chart').html().split('<strong>')[1].split('</strong>')[0];
 				var total = parseInt(numero);
 				if (numero.split(',')[1] != undefined){
 					total = parseInt(numero.split(',')[0]+numero.split(',')[1]);
 				}
 				if (size < total){
-					table.size(size+5);
+					var sizeRepo = size+5;
+					if (sizeRepo < repoGrp.top(Infinity).length-1){
+console.log(sizeRepo)
+console.log(repoGrp.top(Infinity).length-1)
+						order = -1;
+						order2 = -1;
+						table
+							.size(sizeRepo)
+							.columns([
+								{
+									label: 'Repositories',
+									format: function(d){
+										order++;
+										if (repoGrp.top(Infinity).length-1 < order) {
+											order = repoGrp.top(Infinity).length-1
+										}
+										return repoGrp.top(Infinity)[order].key;
+									}
+								},
+								{
+									label: 'Commits',
+									format: function(d){
+										order2++;
+										if (repoGrp.top(Infinity).length-1 < order2) {
+											order2 = repoGrp.top(Infinity).length-1
+										}
+										return repoGrp.top(Infinity)[order2].value;
+									}
+								}
+							]);
+					}
                     table2.size(size+5);
                     table3.size(size+5);
 					dc.redrawAll();
@@ -60,7 +101,7 @@ function Tables(){
 
     table2
         .dimension(nameDim)
-        .group(function (d) {return d.date.getFullYear();})
+        .group(function (d) {return '';})
         .size(7)
         .columns([
             'id',
@@ -86,7 +127,7 @@ function Tables(){
 
     table3
         .dimension(nameDim)
-        .group(function (d) {return d.date.getFullYear();})
+        .group(function (d) {return '';})
         .size(7)
         .columns([
             'id',
