@@ -27,7 +27,7 @@ function Pies(){
             if(filter.constructor==Array){
                 filter[0].forEach(function(element){
                     if(compFilters.indexOf(element)==-1){
-                        $("#filterComp").append('<div id="filter-'+element.replaceAll(" ","0").replaceAll(".","0").replaceAll(",","0").replaceAll("(","0").replaceAll(")","0").replaceAll("?","0").replaceAll("'","0").replaceAll("@","0")+'">'+element+'</div>')
+                        $("#filterComp").append('<a id="filter-'+element.replaceAll(" ","0").replaceAll(".","0").replaceAll(",","0").replaceAll("(","0").replaceAll(")","0").replaceAll("?","0").replaceAll("'","0").replaceAll("@","0")+'"> '+element+' </a>')
                         compFilters.push(element)
                     }else{
                         $('#filter-'+(element.replaceAll(" ","0").replaceAll(".","0").replaceAll(",","0").replaceAll("(","0").replaceAll(")","0").replaceAll("?","0").replaceAll("'","0").replaceAll("@","0"))).remove()
@@ -36,7 +36,7 @@ function Pies(){
                 })
             }else{
                 if(compFilters.indexOf(filter)==-1){
-                    $("#filterComp").append('<div id="filter-'+filter.replaceAll(" ","0").replaceAll(".","0").replaceAll(",","0").replaceAll("(","0").replaceAll(")","0").replaceAll("?","0").replaceAll("'","0").replaceAll("@","0")+'">'+filter+'</div>')
+                    $("#filterComp").append('<a id="filter-'+filter.replaceAll(" ","0").replaceAll(".","0").replaceAll(",","0").replaceAll("(","0").replaceAll(")","0").replaceAll("?","0").replaceAll("'","0").replaceAll("@","0")+'"> '+filter+' </a>')
                     compFilters.push(filter)
                 }else{
                     $('#filter-'+(filter.replaceAll(" ","0").replaceAll(".","0").replaceAll(",","0").replaceAll("(","0").replaceAll(")","0").replaceAll("?","0").replaceAll("'","0").replaceAll("@","0"))).remove()
@@ -74,7 +74,7 @@ function Pies(){
             if(filter.constructor==Array){
                 filter[0].forEach(function(element){
                     if(deveFilters.indexOf(element)==-1){
-                        $("#filterDeve").append('<div id="filter-'+element.replaceAll(" ","0").replaceAll(".","0").replaceAll(",","0").replaceAll("(","0").replaceAll(")","0").replaceAll("?","0").replaceAll("'","0").replaceAll("@","0")+'">'+element+'</div>')
+                        $("#filterDeve").append('<a id="filter-'+element.replaceAll(" ","0").replaceAll(".","0").replaceAll(",","0").replaceAll("(","0").replaceAll(")","0").replaceAll("?","0").replaceAll("'","0").replaceAll("@","0")+'"> '+element+' </a>')
                         deveFilters.push(element)
                     }else{
                         $('#filter-'+(element.replaceAll(" ","0").replaceAll(".","0").replaceAll(",","0").replaceAll("(","0").replaceAll(")","0").replaceAll("?","0").replaceAll("'","0").replaceAll("@","0"))).remove()
@@ -83,7 +83,7 @@ function Pies(){
                 })
             }else{
                 if(deveFilters.indexOf(filter)==-1){
-                    $("#filterDeve").append('<div id="filter-'+filter.replaceAll(" ","0").replaceAll(".","0").replaceAll(",","0").replaceAll("(","0").replaceAll(")","0").replaceAll("?","0").replaceAll("'","0").replaceAll("@","0")+'">'+filter+'</div>')
+                    $("#filterDeve").append('<a id="filter-'+filter.replaceAll(" ","0").replaceAll(".","0").replaceAll(",","0").replaceAll("(","0").replaceAll(")","0").replaceAll("?","0").replaceAll("'","0").replaceAll("@","0")+'"> '+filter+' </a>')
                     deveFilters.push(filter)
                 }else{
                     $('#filter-'+(filter.replaceAll(" ","0").replaceAll(".","0").replaceAll(",","0").replaceAll("(","0").replaceAll(")","0").replaceAll("?","0").replaceAll("'","0").replaceAll("@","0"))).remove()
@@ -116,7 +116,7 @@ function Pies(){
             if(filter.constructor==Array){
                 filter[0].forEach(function(element){
                     if(compFilters.indexOf(element)==-1){
-                        $("#filterRepo").append('<div id="filter-'+element.replaceAll(" ","0").replaceAll(".","0").replaceAll(",","0").replaceAll("(","0").replaceAll(")","0").replaceAll("?","0").replaceAll("'","0").replaceAll("@","0")+'">'+element+'</div>')
+                        $("#filterRepo").append('<a id="filter-'+element.replaceAll(" ","0").replaceAll(".","0").replaceAll(",","0").replaceAll("(","0").replaceAll(")","0").replaceAll("?","0").replaceAll("'","0").replaceAll("@","0")+'"> '+element+' </a>')
                         compFilters.push(element)
                     }else{
                         $('#filter-'+(element.replaceAll(" ","0").replaceAll(".","0").replaceAll(",","0").replaceAll("(","0").replaceAll(")","0").replaceAll("?","0").replaceAll("'","0").replaceAll("@","0"))).remove()
@@ -125,7 +125,7 @@ function Pies(){
                 })
             }else{
                 if(compFilters.indexOf(filter)==-1){
-                    $("#filterRepo").append('<div id="filter-'+filter.replaceAll(" ","0").replaceAll(".","0").replaceAll(",","0").replaceAll("(","0").replaceAll(")","0").replaceAll("?","0").replaceAll("'","0").replaceAll("@","0")+'">'+filter+'</div>')
+                    $("#filterRepo").append('<a id="filter-'+filter.replaceAll(" ","0").replaceAll(".","0").replaceAll(",","0").replaceAll("(","0").replaceAll(")","0").replaceAll("?","0").replaceAll("'","0").replaceAll("@","0")+'"> '+filter+' </a>')
                     compFilters.push(filter)
                 }else{
                     $('#filter-'+(filter.replaceAll(" ","0").replaceAll(".","0").replaceAll(",","0").replaceAll("(","0").replaceAll(")","0").replaceAll("?","0").replaceAll("'","0").replaceAll("@","0"))).remove()

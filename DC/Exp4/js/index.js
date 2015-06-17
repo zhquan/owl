@@ -79,10 +79,10 @@ $(document).ready(function(){
             .dimension(ndx)
             .group(all)
             .html({
-                some:'<strong>%filter-count</strong> commits from <strong>%total-count</strong>'+
-                ' | <button onclick="Reset()">Reset All</button>',
-                all:'<strong>%filter-count</strong> commits from <strong>%total-count</strong>'+
-                ' | <button onclick="Reset()">Reset All</button'
+                some:'<strong>%filter-count</strong> commits out of <strong>%total-count</strong>'+
+                ' | <button onclick="Reset()">Reset All Filters</button>',
+                all:'<strong>%filter-count</strong> commits out of <strong>%total-count</strong>'+
+                ' | <button onclick="Reset()">Reset All Filters</button>'
             });
 
         
@@ -168,4 +168,5 @@ function dcFormat(d){
 function Reset(){
     dc.filterAll();
     dc.redrawAll();
+    dc.renderAll();
 }

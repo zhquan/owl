@@ -27,11 +27,17 @@
 
 </head>
     <body>
-		<div id="chart5" class="dc-data-count" style="margin-left:5%;position: fixed;background:white;"></div>
+        <div style="margin-left:5%;margin-top:0.1%;position: fixed;background:white;">
+    		<div id="chart5" style="margin-top: 0px;" class="dc-data-count"></div>
+            <span><u>Repositories:</u><a id="filterRepo"></a></span>
+            <span><u>Developers:</u><a id="filterDeve"></a></span>
+            <span><u>Organizations:</u><a id="filterComp"></a></span>
+            <div><u>Range:</u><a id="filterFrom">  2012-1-1 //</a><a id="filterTo"> 2015-12-31 </a></div>
+        </div>
 		<br><br>
         <a style="margin-left:5%;margin-right:10%">Repositories</a>
         <a style="margin-left:15%;margin-right:15%">Developers</a>
-        <a style="margin-left:15%;margin-right:15%">Companies</a>
+        <a style="margin-left:15%;margin-right:15%">Organizations</a>
 
         <div>
             <input class="reposInput" style="margin-left:5%">
@@ -44,23 +50,13 @@
             <a id="chart1" class="pieChart"></a>
         </div>
         <div>
-        <table >
-   
-            <tr >
-                <td width="25%" >
-            		<div id="commitsChart"></div>
-            		<div id="commitsSliderChart"></div>
-                </td>
-            
-                <td >
-                    <th style="border: 1px solid black"><u>Repositories:</u><div id="filterRepo"></div></th>
-                    <th style="border: 1px solid black"><u>Developers:</u><div id="filterDeve"></div></th>
-                    <th style="border: 1px solid black"><u>Companies:</u><div id="filterComp"></div></th>
-                </td>
 
-            </tr>
-          
-        </table>
+
+        <div style="margin-left:5%">
+    		<div id="commitsChart"></div>
+    		<div id="commitsSliderChart"></div>
+        </div>
+            
         </div>
         <div style=" margin-top:3%; margin-left:10%">
 			<a id="table" style="margin-left:5%" class="table table-hover dc-data-table"></a>
