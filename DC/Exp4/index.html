@@ -1,21 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Interactive report by Bitergia</title>
 
 	<!-- CSS -->
-    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="bootstrap-3.3.5-dist/css/bootstrap.min.css">
 	<link rel="stylesheet" type="text/css" href="css/jquery-ui.custom.min.css">
-    <link rel="stylesheet" type="text/css" href="css/dc.css"/>
+  <link rel="stylesheet" type="text/css" href="css/dc.css"/>
 	<link rel="stylesheet" type="text/css" href="css/index.css"/>
 
 	<!-- JavaScrip -->
-    <script type="text/javascript" src="js/jquery.min.js"></script>
+  <script type="text/javascript" src="js/jquery.min.js"></script>
 	<script type="text/javascript" src="js/jquery-ui.min.js"></script>
-    <script type="text/javascript" src="js/d3.js"></script>
-    <script type="text/javascript" src="js/crossfilter.js"></script>
-    <script type="text/javascript" src="js/dc.js"></script>
-    <script type="text/javascript" src="js/colorbrewer.js"></script>
+  <script type="text/javascript" src="bootstrap-3.3.5-dist/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="js/d3.js"></script>
+  <script type="text/javascript" src="js/crossfilter.js"></script>
+  <script type="text/javascript" src="js/dc.js"></script>
+  <script type="text/javascript" src="js/colorbrewer.js"></script>
 
     <!-- External Scripts -->
     <script type="text/javascript" src="js/index.js"></script>
@@ -23,47 +28,74 @@
     <script type="text/javascript" src="js/TablesCharts.js"></script>
     <script type="text/javascript" src="js/TimeCharts.js"></script>
 
-
-
 </head>
-    <body>
-        <div style="margin-left:5%;margin-top:0.1%;position: fixed;background:white;">
-    		<div id="chart5" style="margin-top: 0px;" class="dc-data-count"></div>
-            <span><u>Repositories:</u><a id="filterRepo"></a></span>
-            <span><u>Developers:</u><a id="filterDeve"></a></span>
-            <span><u>Organizations:</u><a id="filterComp"></a></span>
-            <div><u>Range:</u><a id="filterFrom">  2012-1-1 //</a><a id="filterTo"> 2015-12-31 </a></div>
+  <body>
+    <div class="container-fluid">
+      <div class="row" style="position: fixed;background:#eee; width=100%;z-index:1000;">
+        <div class="col-md-4">
+          <div id="chart5" style="margin-top: 0px; float:none;" class="dc-data-count"></div>
         </div>
-		<br><br>
-        <a style="margin-left:5%;margin-right:10%">Repositories</a>
-        <a style="margin-left:15%;margin-right:15%">Developers</a>
-        <a style="margin-left:15%;margin-right:15%">Organizations</a>
+        <div class="col-md-2">
+          <span><b>Repositories:</b><a id="filterRepo"></a></span>
+        </div>
+        <div class="col-md-2">
+          <span><b>Developers:</b><a id="filterDeve"></a></span>
+        </div>
+        <div class="col-md-2">
+          <span><b>Organizations:</b><a id="filterComp"></a></span>
+        </div>
+        <div class="col-md-2">
+          <div><b>Range:</b><span id="filterFrom">  2012-1-1 //</span><span id="filterTo"> 2015-12-31 </span></div>
+        </div>
+      </div>
 
-        <div>
-            <input class="reposInput" style="margin-left:5%">
-            <input class="developersInput" style="margin-left:15%"> 
-            <input class="companiesInput" style="margin-left:20%"> 
-        </div>
-        <div style=" margin-top:2%">
-            <a id="chart3" class="pieChart"></a>
-            <a id="chart2" class="pieChart"></a>
-            <a id="chart1" class="pieChart"></a>
-        </div>
-        <div>
+      <div class="row" style="padding-top: 70px;">
+        <div class="col-md-4 text-center">
+              <form class="form-inline" style="margin-bottom: 3%;">
+                <label for="reposInput">Repositories</label>
+                <input class="reposInput form-control" id="reposInput" type="text" placeholder="repository">
+              </form>
+              <div id="chart3" class="pieChart"></div>
+            </div>
+            <div class="col-md-4 text-center">
+              <form class="form-inline" style="margin-bottom: 3%;">
+                <label for="developersInput">Developers</label>
+                <input class="developersInput form-control" id="developersInput" type="text" placeholder="developer">
+              </form>
+              <div id="chart2" class="pieChart"></div>
+            </div>
+            <div class="col-md-4 text-center">
+              <form class="form-inline" style="margin-bottom: 3%;">
+                <label for="companiesInput">Developers</label>
+                <input class="companiesInput form-control" id="companiesInput" type="text" placeholder="company">
+              </form>
+              <div id="chart1" class="pieChart"></div>
+            </div>
+      </div>
 
+      <div class="row">
+        <div class="col-md-12">
+          <div id="commitsChart"></div>
+      		<div id="commitsSliderChart"></div>
+        </div>
+      </div>
 
-        <div style="margin-left:5%">
-    		<div id="commitsChart"></div>
-    		<div id="commitsSliderChart"></div>
+      <div class="row">
+        <div class="col-md-3">
+          <table id="table" class="table table-hover dc-data-table"></table>
         </div>
-            
+        <div class="col-md-3">
+          <table id="tableOrg" class="table table-hover dc-data-table"></table>
         </div>
-        <div style=" margin-top:3%; margin-left:10%">
-			<a id="table" style="margin-left:5%" class="table table-hover dc-data-table"></a>
-            <a id="tableOrg" style="margin-left:5%" class="table table-hover dc-data-table"></a>
-            <a id="tableRepo" style="margin-left:5%" class="table table-hover dc-data-table"></a>
-            <a id="tableAuth" style="margin-left:5%" class="table table-hover dc-data-table"></a>
+        <div class="col-md-3">
+          <table id="tableRepo" class="table table-hover dc-data-table"></table>
         </div>
+        <div class="col-md-3">
+          <table id="tableAuth" class="table table-hover dc-data-table"></table>
+        </div>
+      </div>
+
+    </div>
 
     </body>
 </html>
