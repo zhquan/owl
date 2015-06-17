@@ -1,3 +1,8 @@
 .dc-table-column._2 {
 	cursor: pointer;
 }
+
+.ui-autocomplete{
+		max-height: 500px;
+		overflow: hidden;
+}
