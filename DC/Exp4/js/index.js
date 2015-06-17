@@ -89,15 +89,21 @@ $(document).ready(function(){
         dc.renderAll();
 
         $(".companiesInput").autocomplete({
-            source:companiesLook["array"], minLength:0
+            source:companiesLook["array"], 
+            minLength:0,
+            options: {
+                max: 10
+            }
         }).on('focus', function() { $(this).keydown(); });
 
         $(".developersInput").autocomplete({
-            source:users, minLength:0
+            source:users, 
+            minLength:0
         }).on('focus', function() { $(this).keydown(); });
 
         $(".reposInput").autocomplete({
-            source:repos, minLength:0
+            source:repos, 
+            minLength:0
         }).on('focus', function() { $(this).keydown(); });
 
         $('.companiesInput').keyup(function(e){
