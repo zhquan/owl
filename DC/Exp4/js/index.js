@@ -89,23 +89,23 @@ $(document).ready(function(){
         dc.renderAll();
 
         $(".companiesInput").autocomplete({
-            source:companiesLook["array"]
-        });
+            source:companiesLook["array"], minLength:0
+        }).on('focus', function() { $(this).keydown(); });
 
         $(".developersInput").autocomplete({
-            source:users
-        });
+            source:users, minLength:0
+        }).on('focus', function() { $(this).keydown(); });
 
         $(".reposInput").autocomplete({
-            source:repos
-        });
+            source:repos, minLength:0
+        }).on('focus', function() { $(this).keydown(); });
 
         $('.companiesInput').keyup(function(e){
             if(e.keyCode == 13)
             {
                 var company=this.value;
                 this.value=""
-                commitsPie.filter(company)
+                compPie.filter(company)
                 dc.redrawAll();
             }
 
