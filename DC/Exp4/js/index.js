@@ -222,7 +222,7 @@ function dcFormat(d){
 }
 
 function Reset(){
-    dc.filterAll();
+	dc.filterAll();
 	var order = -1;
 	var order2 = -1;
 	tableRepo
@@ -294,7 +294,6 @@ console.log(orgGrp.top(Infinity)[orgOrderKey])
 			}
 		]);
 	table.size(7);
-	dc.renderAll();
     dc.redrawAll();
     
 }
