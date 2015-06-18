@@ -131,6 +131,12 @@ $(document).ready(function(){
         
         dc.renderAll();
 
+
+        /**************** Redraw URL ************/
+
+        readURL()
+
+        /****************Inputs****************/
         $(':input:not(textarea)').keypress(function(event) { 
             return event.keyCode != 13;
         });
@@ -221,6 +227,8 @@ function dcFormat(d){
     return array;
 }
 
+/************** Reset **************/
+
 function Reset(){
 	dc.filterAll();
 	var order = -1;
@@ -291,5 +299,63 @@ function Reset(){
 		]);
 	table.size(7);
     dc.redrawAll();
-    
+}
+
+/**************** Generate URL by filters *****************/
+function writeURL(){
+    var repoStrUrl='repo='
+    repoFilters.forEach(function(element){
+        if(repoFilters.indexOf(element)==repoFilters.length-1){
+            repoStrUrl+=element
+        }else{
+            repoStrUrl+=element+'+'
+        }
+    })
+    var compStrUrl='comp='
+    compFilters.forEach(function(element){
+        if(compFilters.indexOf(element)==compFilters.length-1){
+            compStrUrl+=element
+        }else{
+            compStrUrl+=element+'+'
+        }
+    })
+    var deveStrUrl='deve='
+    deveFilters.forEach(function(element){
+        if(deveFilters.indexOf(element)==deveFilters.length-1){
+            deveStrUrl+=element
+        }else{
+            deveStrUrl+=element+'+'
+        }
+    })
+    return '?'+repoStrUrl+'&'+compStrUrl+'&'+deveStrUrl
+}
+
+/********************** Read generated URL ****************************/
+function readURL(){
+    var arrayStrURL=document.URL.split("?")
+    if(arrayStrURL.length!=1){
+        var repoStrUrl=arrayStrURL[1].split("repo=")[1].split("&")[0].split("+")
+        var compStrUrl=arrayStrURL[1].split("comp=")[1].split("&")[0].split("+")
+        var deveStrUrl=arrayStrURL[1].split("deve=")[1].split("&")[0].split("+")
+        
+        if(repoStrUrl[0]!=""){
+            repoStrUrl.forEach(function(element){
+              repoPie.filter(unescape(element))
+            })
+        }
+
+        if(compStrUrl[0]!=""){
+            compStrUrl.forEach(function(element){
+              compPie.filter(unescape(element))
+            })
+        }
+
+        if(deveStrUrl[0]!=""){
+           deveStrUrl.forEach(function(element){
+            commitsNamePie.filter(unescape(element))
+            }) 
+        }
+        
+        dc.redrawAll()
+    }
 }

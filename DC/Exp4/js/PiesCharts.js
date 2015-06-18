@@ -43,7 +43,8 @@ function Pies(){
                     $('#filter-'+(filter.replaceAll(" ","0").replaceAll(".","0").replaceAll(",","0").replaceAll("(","0").replaceAll(")","0").replaceAll("?","0").replaceAll("'","0").replaceAll("@","0"))).remove()
                     compFilters.splice(compFilters.indexOf(filter),1)
                 }
-            }              
+            } 
+            window.history.replaceState("object or string", "Title", writeURL());             
         }
     });
 
@@ -91,7 +92,9 @@ function Pies(){
                     $('#filter-'+(filter.replaceAll(" ","0").replaceAll(".","0").replaceAll(",","0").replaceAll("(","0").replaceAll(")","0").replaceAll("?","0").replaceAll("'","0").replaceAll("@","0"))).remove()
                     deveFilters.splice(deveFilters.indexOf(filter),1)
                 }
-            }              
+            }
+            window.history.replaceState("object or string", "Title", writeURL());             
+              
         }
     });
 
@@ -113,28 +116,30 @@ function Pies(){
 
     repoPie.on("filtered", function(chart,filter) {
         if(filter==null){
-            compFilters=[]
+            repoFilters=[]
             $("#filterRepo").empty()
         }else if(filter!="Others"){
             if(filter.constructor==Array){
                 filter[0].forEach(function(element){
-                    if(compFilters.indexOf(element)==-1){
+                    if(repoFilters.indexOf(element)==-1){
                         $("#filterRepo").append('<span id="filter-'+element.replaceAll(" ","0").replaceAll(".","0").replaceAll(",","0").replaceAll("(","0").replaceAll(")","0").replaceAll("?","0").replaceAll("'","0").replaceAll("@","0")+'"> '+element+' </span>')
-                        compFilters.push(element)
+                        repoFilters.push(element)
                     }else{
                         $('#filter-'+(element.replaceAll(" ","0").replaceAll(".","0").replaceAll(",","0").replaceAll("(","0").replaceAll(")","0").replaceAll("?","0").replaceAll("'","0").replaceAll("@","0"))).remove()
-                        compFilters.splice(compFilters.indexOf(element),1)
+                        repoFilters.splice(repoFilters.indexOf(element),1)
                     }
                 })
             }else{
-                if(compFilters.indexOf(filter)==-1){
+                if(repoFilters.indexOf(filter)==-1){
                     $("#filterRepo").append('<span id="filter-'+filter.replaceAll(" ","0").replaceAll(".","0").replaceAll(",","0").replaceAll("(","0").replaceAll(")","0").replaceAll("?","0").replaceAll("'","0").replaceAll("@","0")+'"> '+filter+' </span>')
-                    compFilters.push(filter)
+                    repoFilters.push(filter)
                 }else{
                     $('#filter-'+(filter.replaceAll(" ","0").replaceAll(".","0").replaceAll(",","0").replaceAll("(","0").replaceAll(")","0").replaceAll("?","0").replaceAll("'","0").replaceAll("@","0"))).remove()
-                    compFilters.splice(compFilters.indexOf(filter),1)
+                    repoFilters.splice(repoFilters.indexOf(filter),1)
                 }
-            }              
+            }
+            window.history.replaceState("object or string", "Title", writeURL());             
+              
         }
     });
 
