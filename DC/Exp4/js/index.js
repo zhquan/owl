@@ -131,12 +131,13 @@ $(document).ready(function(){
         
         dc.renderAll();
 
+        $(':input:not(textarea)').keypress(function(event) { 
+            return event.keyCode != 13;
+        });
+
         $(".companiesInput").autocomplete({
             source:companiesLook["array"], 
-            minLength:0,
-            options: {
-                max: 10
-            }
+            minLength:0
         }).on('focus', function() { $(this).keydown(); });
 
         $(".developersInput").autocomplete({
@@ -153,9 +154,11 @@ $(document).ready(function(){
             if(e.keyCode == 13)
             {
                 var company=this.value;
-                this.value=""
-                compPie.filter(company)
-                dc.redrawAll();
+                if(company!=""){
+                    this.value=""
+                    compPie.filter(company)
+                    dc.redrawAll();
+                }
             }
 
         });
@@ -163,10 +166,12 @@ $(document).ready(function(){
         $('.developersInput').keyup(function(e){
             if(e.keyCode == 13)
             {
-                var company=this.value;
-                this.value=""
-                commitsNamePie.filter(company)
-                dc.redrawAll();
+                var deve=this.value;
+                if(deve!=""){
+                    this.value=""
+                    commitsNamePie.filter(deve)
+                    dc.redrawAll();
+                }
             }
 
         });
@@ -174,10 +179,12 @@ $(document).ready(function(){
         $('.reposInput').keyup(function(e){
             if(e.keyCode == 13)
             {
-                var company=this.value;
-                this.value=""
-                repoPie.filter(company)
-                dc.redrawAll();
+                var repo=this.value;
+                if(repo!=""){
+                    this.value=""
+                    repoPie.filter(repo)
+                    dc.redrawAll();
+                }
             }
 
         });
