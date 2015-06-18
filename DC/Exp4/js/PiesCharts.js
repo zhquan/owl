@@ -17,7 +17,8 @@ function Pies(){
     .group(grp)
     .cx(300)
     .cap(14)
-    .legend(dc.legend().x(17).y(3).itemHeight(13).gap(5));
+    .legend(dc.legend().x(17).y(3).itemHeight(13).gap(5))
+    .ordering(function (d) { return -d.value; });
 
     compPie.on("filtered", function(chart,filter) {
         if(filter==null){
@@ -64,7 +65,8 @@ function Pies(){
     .group(grp2)
     .cx(300)
     .cap(14)
-    .legend(dc.legend().x(17).y(3).itemHeight(13).gap(5));
+    .legend(dc.legend().x(17).y(3).itemHeight(13).gap(5))
+    .ordering(function (d) { return -d.value; });
 
     commitsNamePie.on("filtered", function(chart,filter) {
         if(filter==null){
@@ -106,7 +108,8 @@ function Pies(){
     .group(grp3)
     .cap(14)
     .cx(300)
-    .legend(dc.legend().x(17).y(3).itemHeight(13).gap(5));
+    .legend(dc.legend().x(17).y(3).itemHeight(13).gap(5))
+    .ordering(function (d) { return -d.value; });
 
     repoPie.on("filtered", function(chart,filter) {
         if(filter==null){
