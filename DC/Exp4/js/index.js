@@ -245,10 +245,55 @@ function Reset(){
                 }
             }
         ]);
-
 	tableRepo.on('renderlet', function(table) {
         tableAuth.selectAll('.dc-table-group').classed('info', true);
     });
+	var orgOrderKey = -1;
+	var orgOrderValue = -1;
+	tableOrg
+		.dimension(orgDim)
+		.group(function (d) {return '';})
+		.size(7)
+		.columns([
+			{
+				label: 'Organizations',
+				format: function(d){
+					orgOrderKey++;
+console.log(orgGrp.top(Infinity)[orgOrderKey])
+					return orgGrp.top(Infinity)[orgOrderKey].key;
+				}
+			},
+			{
+				label: 'Commits',
+				format: function (d) {
+					orgOrderValue++;
+					return orgGrp.top(Infinity)[orgOrderValue].value;
+				}
+			}
+		]);
+	var authOrderKey = -1;
+	var authOrderValue = -1;
+	tableAuth
+		.dimension(orgDim)
+		.group(function (d) {return '';})
+		.size(7)
+		.columns([
+			{
+				label: 'Authors',
+				format: function(d){
+					authOrderKey++;
+					return authGrp.top(Infinity)[authOrderKey].key;
+				}
+			},
+			{
+				label: 'Commits',
+				format: function (d) {
+					authOrderValue++;
+					return authGrp.top(Infinity)[authOrderValue].value;
+				}
+			}
+		]);
+	table.size(7);
 	dc.renderAll();
     dc.redrawAll();
     
