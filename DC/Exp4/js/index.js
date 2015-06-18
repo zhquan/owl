@@ -245,9 +245,6 @@ function Reset(){
                 }
             }
         ]);
-	tableRepo.on('renderlet', function(table) {
-        tableAuth.selectAll('.dc-table-group').classed('info', true);
-    });
 	var orgOrderKey = -1;
 	var orgOrderValue = -1;
 	tableOrg
@@ -259,7 +256,6 @@ function Reset(){
 				label: 'Organizations',
 				format: function(d){
 					orgOrderKey++;
-console.log(orgGrp.top(Infinity)[orgOrderKey])
 					return orgGrp.top(Infinity)[orgOrderKey].key;
 				}
 			},
