@@ -28,10 +28,12 @@ var companiesLook={}
 companiesLook["array"]=[]
 var repos=[]
 var users=[]
+var proj=[]
 
 var repoFilters=[]
 var deveFilters=[]
 var compFilters=[]
+var projFilters=[]
 $(document).ready(function(){
 
     /*************** Download of JSON ***************/
@@ -59,6 +61,9 @@ $(document).ready(function(){
 
         $.getJSON('json/random-proj.json', function (d) {
             scmProj = d;
+            d.values.forEach(function(element){
+                proj.push(element[1])
+            })
         })
 
 
@@ -146,22 +151,27 @@ $(document).ready(function(){
             return event.keyCode != 13;
         });
 
-        $(".companiesInput").autocomplete({
+        $("#companiesInput").autocomplete({
             source:companiesLook["array"],
             minLength:0
         }).on('focus', function() { $(this).keydown(); });
 
-        $(".developersInput").autocomplete({
+        $("#developersInput").autocomplete({
             source:users,
             minLength:0
         }).on('focus', function() { $(this).keydown(); });
 
-        $(".reposInput").autocomplete({
+        $("#reposInput").autocomplete({
             source:repos,
             minLength:0
         }).on('focus', function() { $(this).keydown(); });
 
-        $('.companiesInput').keyup(function(e){
+        $("#projInput").autocomplete({
+            source:proj,
+            minLength:0
+        }).on('focus', function() { $(this).keydown(); });
+
+        $('#companiesInput').keyup(function(e){
             if(e.keyCode == 13)
             {
                 var company=this.value;
@@ -174,7 +184,7 @@ $(document).ready(function(){
 
         });
 
-        $('.developersInput').keyup(function(e){
+        $('#developersInput').keyup(function(e){
             if(e.keyCode == 13)
             {
                 var deve=this.value;
@@ -187,13 +197,26 @@ $(document).ready(function(){
 
         });
 
-        $('.reposInput').keyup(function(e){
+        $('#reposInput').keyup(function(e){
             if(e.keyCode == 13)
             {
                 var repo=this.value;
                 if(repo!=""){
                     this.value=""
                     repoPie.filter(repo)
+                    dc.redrawAll();
+                }
+            }
+
+        });
+
+        $('#projInput').keyup(function(e){
+            if(e.keyCode == 13)
+            {
+                var proj=this.value;
+                if(proj!=""){
+                    this.value=""
+                    projPie.filter(proj)
                     dc.redrawAll();
                 }
             }
@@ -338,7 +361,17 @@ function writeURL(){
             deveStrUrl+=element+'+'
         }
     })
-    return '?'+repoStrUrl+'&'+compStrUrl+'&'+deveStrUrl
+
+    var projStrUrl='proj='
+    projFilters.forEach(function(element){
+        if(projFilters.indexOf(element)==projFilters.length-1){
+            projStrUrl+=element
+        }else{
+            projStrUrl+=element+'+'
+        }
+    })
+
+    return '?'+projStrUrl+'&'+repoStrUrl+'&'+deveStrUrl+'&'+compStrUrl
 }
 
 /********************** Read generated URL ****************************/
@@ -348,6 +381,7 @@ function readURL(){
         var repoStrUrl=arrayStrURL[1].split("repo=")[1].split("&")[0].split("+")
         var compStrUrl=arrayStrURL[1].split("comp=")[1].split("&")[0].split("+")
         var deveStrUrl=arrayStrURL[1].split("deve=")[1].split("&")[0].split("+")
+        var projStrUrl=arrayStrURL[1].split("proj=")[1].split("&")[0].split("+")
 
         if(repoStrUrl[0]!=""){
             repoStrUrl.forEach(function(element){
@@ -362,8 +396,14 @@ function readURL(){
         }
 
         if(deveStrUrl[0]!=""){
-           deveStrUrl.forEach(function(element){
-            commitsNamePie.filter(unescape(element))
+            deveStrUrl.forEach(function(element){
+                commitsNamePie.filter(unescape(element))
+            })
+        }
+
+        if(projStrUrl[0]!=""){
+            projStrUrl.forEach(function(element){
+                projPie.filter(unescape(element))
             })
         }
 

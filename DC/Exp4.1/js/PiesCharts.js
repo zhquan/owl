@@ -161,6 +161,34 @@ function Pies(){
     .legend(dc.legend().x(0).y(3).itemHeight(13).gap(5))
     .ordering(function (d) { return -d.value; });
 
+    projPie.on("filtered", function(chart,filter) {
+        if(filter==null){
+            projFilters=[]
+            $("#filterProj").empty()
+        }else if(filter!="Others"){
+            if(filter.constructor==Array){
+                filter[0].forEach(function(element){
+                    if(projFilters.indexOf(element)==-1){
+                        $("#filterProj").append('<span id="filter-'+element.replaceAll(" ","0").replaceAll(".","0").replaceAll(",","0").replaceAll("(","0").replaceAll(")","0").replaceAll("?","0").replaceAll("'","0").replaceAll("@","0")+'"> '+element+' </span>')
+                        projFilters.push(element)
+                    }else{
+                        $('#filter-'+(element.replaceAll(" ","0").replaceAll(".","0").replaceAll(",","0").replaceAll("(","0").replaceAll(")","0").replaceAll("?","0").replaceAll("'","0").replaceAll("@","0"))).remove()
+                        projFilters.splice(projFilters.indexOf(element),1)
+                    }
+                })
+            }else{
+                if(projFilters.indexOf(filter)==-1){
+                    $("#filterProj").append('<span id="filter-'+filter.replaceAll(" ","0").replaceAll(".","0").replaceAll(",","0").replaceAll("(","0").replaceAll(")","0").replaceAll("?","0").replaceAll("'","0").replaceAll("@","0")+'"> '+filter+' </span>')
+                    projFilters.push(filter)
+                }else{
+                    $('#filter-'+(filter.replaceAll(" ","0").replaceAll(".","0").replaceAll(",","0").replaceAll("(","0").replaceAll(")","0").replaceAll("?","0").replaceAll("'","0").replaceAll("@","0"))).remove()
+                    projFilters.splice(projFilters.indexOf(filter),1)
+                }
+            }
+        }
+        window.history.replaceState("object or string", "Title", writeURL());
+
+    });
 
 
 }
