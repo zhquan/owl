@@ -7,6 +7,7 @@ var commitsData;
 var scmCompany;
 var scmRepo;
 var scmCommit;
+var scmProj;
 
 var table;
 var tableRepo;
@@ -27,10 +28,12 @@ var companiesLook={}
 companiesLook["array"]=[]
 var repos=[]
 var users=[]
+var proj=[]
 
 var repoFilters=[]
 var deveFilters=[]
 var compFilters=[]
+var projFilters=[]
 $(document).ready(function(){
 
     /*************** Download of JSON ***************/
@@ -54,11 +57,17 @@ $(document).ready(function(){
 
         $.getJSON('json/scm-commits-distinct.json', function (d) {
             scmCommit = d;
+        }),
+
+        $.getJSON('json/random-proj.json', function (d) {
+            scmProj = d;
+            d.values.forEach(function(element){
+                proj.push(element[1])
+            })
         })
 
-        
-    ).done(function(){
 
+    ).done(function(){
         /*************** General Data ***************/
         commitsData = dcFormat(scmCommit);
         ndx = crossfilter(commitsData);
@@ -74,13 +83,13 @@ $(document).ready(function(){
 
         /*************** Pie charts ***************/
 
-        
+
         Pies()
 
         /*************** Time Chart ***************/
 
         Time()
-    
+
 
         /*************** Table Chart ***************/
 		repo = [];
@@ -123,12 +132,12 @@ $(document).ready(function(){
             .group(all)
             .html({
                 some:'<strong>%filter-count</strong> commits out of <strong>%total-count</strong>'+
-                ' | <button onclick="Reset()">Reset All Filters</button>',
+                ' <button type="button" class="btn btn-primary btn-sm" onclick="Reset()">Reset all filters</button>',
                 all:'<strong>%filter-count</strong> commits out of <strong>%total-count</strong>'+
-                ' | <button onclick="Reset()">Reset All Filters</button>'
+                ' <button type="button" class="btn btn-primary btn-sm" onclick="Reset()">Reset all filters</button>'
             });
 
-        
+
         dc.renderAll();
 
 
@@ -137,26 +146,31 @@ $(document).ready(function(){
         readURL()
 
         /****************Inputs****************/
-        $(':input:not(textarea)').keypress(function(event) { 
+        $(':input:not(textarea)').keypress(function(event) {
             return event.keyCode != 13;
         });
 
-        $(".companiesInput").autocomplete({
-            source:companiesLook["array"], 
+        $("#companiesInput").autocomplete({
+            source:companiesLook["array"],
             minLength:0
         }).on('focus', function() { $(this).keydown(); });
 
-        $(".developersInput").autocomplete({
-            source:users, 
+        $("#developersInput").autocomplete({
+            source:users,
             minLength:0
         }).on('focus', function() { $(this).keydown(); });
 
-        $(".reposInput").autocomplete({
-            source:repos, 
+        $("#reposInput").autocomplete({
+            source:repos,
             minLength:0
         }).on('focus', function() { $(this).keydown(); });
 
-        $('.companiesInput').keyup(function(e){
+        $("#projInput").autocomplete({
+            source:proj,
+            minLength:0
+        }).on('focus', function() { $(this).keydown(); });
+
+        $('#companiesInput').keyup(function(e){
             if(e.keyCode == 13)
             {
                 var company=this.value;
@@ -169,7 +183,7 @@ $(document).ready(function(){
 
         });
 
-        $('.developersInput').keyup(function(e){
+        $('#developersInput').keyup(function(e){
             if(e.keyCode == 13)
             {
                 var deve=this.value;
@@ -182,7 +196,7 @@ $(document).ready(function(){
 
         });
 
-        $('.reposInput').keyup(function(e){
+        $('#reposInput').keyup(function(e){
             if(e.keyCode == 13)
             {
                 var repo=this.value;
@@ -195,11 +209,24 @@ $(document).ready(function(){
 
         });
 
+        $('#projInput').keyup(function(e){
+            if(e.keyCode == 13)
+            {
+                var proj=this.value;
+                if(proj!=""){
+                    this.value=""
+                    projPie.filter(proj)
+                    dc.redrawAll();
+                }
+            }
+
+        });
+
     })
 
 });
 
-String.prototype.replaceAll = function(str1, str2, ignore) 
+String.prototype.replaceAll = function(str1, str2, ignore)
 {
     return this.replace(new RegExp(str1.replace(/([\/\,\!\\\^\$\{\}\[\]\(\)\.\*\+\?\|\<\>\-\&])/g,"\\$&"),(ignore?"gi":"g")),(typeof(str2)=="string")?str2.replace(/\$/g,"$$$$"):str2);
 }
@@ -222,6 +249,8 @@ function dcFormat(d){
         dic[names[7]] = val[7];
         dic['company'] = companiesLook[val[4]];
         dic['repo'] = scmRepo['values'][val[5]-1][1];
+        dic['proj'] = scmProj['values'][Math.floor(Math.random()*10)][1];
+
         array.push(dic);
     });
     return array;
@@ -230,75 +259,79 @@ function dcFormat(d){
 /************** Reset **************/
 
 function Reset(){
-	dc.filterAll();
-	var order = -1;
-	var order2 = -1;
-	tableRepo
-        .dimension(repoDim)
-        .group(function (d) {return "";})
-        .size(7)
-        .columns([
-            {
-            	label: 'Repositories',
-                format: function(d){
-					order++;
-					return repoGrp.top(Infinity)[order].key;
+	
+    $.when(
+        dc.filterAll()
+    ).done(function(){
+        var order = -1;
+        var order2 = -1;
+        tableRepo
+            .dimension(repoDim)
+            .group(function (d) {return "";})
+            .size(7)
+            .columns([
+                {
+                    label: 'Repositories',
+                    format: function(d){
+                        order++;
+                        return repoGrp.top(Infinity)[order].key;
+                    }
+                },
+                {
+                    label: 'Commits',
+                    format: function(d){
+                        order2++;
+                        return repoGrp.top(Infinity)[order2].value;
+                    }
                 }
-            },
-            {
-            	label: 'Commits',
-                format: function(d){
-					order2++;
-					return repoGrp.top(Infinity)[order2].value;
+            ]);
+        var orgOrderKey = -1;
+        var orgOrderValue = -1;
+        tableOrg
+            .dimension(orgDim)
+            .group(function (d) {return '';})
+            .size(7)
+            .columns([
+                {
+                    label: 'Organizations',
+                    format: function(d){
+                        orgOrderKey++;
+                        return orgGrp.top(Infinity)[orgOrderKey].key;
+                    }
+                },
+                {
+                    label: 'Commits',
+                    format: function (d) {
+                        orgOrderValue++;
+                        return orgGrp.top(Infinity)[orgOrderValue].value;
+                    }
                 }
-            }
-        ]);
-	var orgOrderKey = -1;
-	var orgOrderValue = -1;
-	tableOrg
-		.dimension(orgDim)
-		.group(function (d) {return '';})
-		.size(7)
-		.columns([
-			{
-				label: 'Organizations',
-				format: function(d){
-					orgOrderKey++;
-					return orgGrp.top(Infinity)[orgOrderKey].key;
-				}
-			},
-			{
-				label: 'Commits',
-				format: function (d) {
-					orgOrderValue++;
-					return orgGrp.top(Infinity)[orgOrderValue].value;
-				}
-			}
-		]);
-	var authOrderKey = -1;
-	var authOrderValue = -1;
-	tableAuth
-		.dimension(orgDim)
-		.group(function (d) {return '';})
-		.size(7)
-		.columns([
-			{
-				label: 'Authors',
-				format: function(d){
-					authOrderKey++;
-					return authGrp.top(Infinity)[authOrderKey].key;
-				}
-			},
-			{
-				label: 'Commits',
-				format: function (d) {
-					authOrderValue++;
-					return authGrp.top(Infinity)[authOrderValue].value;
-				}
-			}
-		]);
-	table.size(7);
-    dc.redrawAll();
+            ]);
+        var authOrderKey = -1;
+        var authOrderValue = -1;
+        tableAuth
+            .dimension(orgDim)
+            .group(function (d) {return '';})
+            .size(7)
+            .columns([
+                {
+                    label: 'Authors',
+                    format: function(d){
+                        authOrderKey++;
+                        return authGrp.top(Infinity)[authOrderKey].key;
+                    }
+                },
+                {
+                    label: 'Commits',
+                    format: function (d) {
+                        authOrderValue++;
+                        return authGrp.top(Infinity)[authOrderValue].value;
+                    }
+                }
+            ]);
+        table.size(7);
+        dc.redrawAll();
+    })
 }
 
 /**************** Generate URL by filters *****************/
@@ -327,7 +360,17 @@ function writeURL(){
             deveStrUrl+=element+'+'
         }
     })
-    return '?'+repoStrUrl+'&'+compStrUrl+'&'+deveStrUrl
+
+    var projStrUrl='proj='
+    projFilters.forEach(function(element){
+        if(projFilters.indexOf(element)==projFilters.length-1){
+            projStrUrl+=element
+        }else{
+            projStrUrl+=element+'+'
+        }
+    })
+
+    return '?'+projStrUrl+'&'+repoStrUrl+'&'+deveStrUrl+'&'+compStrUrl
 }
 
 /********************** Read generated URL ****************************/
@@ -337,7 +380,8 @@ function readURL(){
         var repoStrUrl=arrayStrURL[1].split("repo=")[1].split("&")[0].split("+")
         var compStrUrl=arrayStrURL[1].split("comp=")[1].split("&")[0].split("+")
         var deveStrUrl=arrayStrURL[1].split("deve=")[1].split("&")[0].split("+")
-        
+        var projStrUrl=arrayStrURL[1].split("proj=")[1].split("&")[0].split("+")
+
         if(repoStrUrl[0]!=""){
             repoStrUrl.forEach(function(element){
               repoPie.filter(unescape(element))
@@ -351,11 +395,17 @@ function readURL(){
         }
 
         if(deveStrUrl[0]!=""){
-           deveStrUrl.forEach(function(element){
-            commitsNamePie.filter(unescape(element))
-            }) 
+            deveStrUrl.forEach(function(element){
+                commitsNamePie.filter(unescape(element))
+            })
         }
-        
+
+        if(projStrUrl[0]!=""){
+            projStrUrl.forEach(function(element){
+                projPie.filter(unescape(element))
+            })
+        }
+
         dc.redrawAll()
     }
 }

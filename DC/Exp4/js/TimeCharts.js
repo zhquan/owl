@@ -23,7 +23,6 @@ function Time(){
     	.xUnits(d3.time.months)
 		.elasticY(true)
 	    .renderHorizontalGridLines(true)
-	    .legend(dc.legend().x(800).y(10).itemHeight(13).gap(5))
 	    .brushOn(true)
 	    .group(commitGrp, 'Commit');
 

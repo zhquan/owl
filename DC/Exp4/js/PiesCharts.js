@@ -3,6 +3,7 @@ function Pies(){
 	compPie = dc.pieChart('#chart1');
     commitsNamePie = dc.pieChart('#chart2');
     repoPie = dc.pieChart('#chart3');
+    projPie= dc.pieChart('#chart6')
 
     var dim = ndx.dimension(function(d){
         return d.company;
@@ -11,13 +12,13 @@ function Pies(){
     var grp = dim.group()
 
     compPie
-    .width(472)
-    .height(270)
+    .width(350)
+    .height(250)
     .dimension(dim)
     .group(grp)
-    .cx(300)
-    .cap(14)
-    .legend(dc.legend().x(17).y(3).itemHeight(13).gap(5))
+    .cx(225)
+    .cap(10)
+    .legend(dc.legend().x(0).y(3).itemHeight(13).gap(5))
     .ordering(function (d) { return -d.value; });
 
     compPie.on("filtered", function(chart,filter) {
@@ -43,9 +44,10 @@ function Pies(){
                     $('#filter-'+(filter.replaceAll(" ","0").replaceAll(".","0").replaceAll(",","0").replaceAll("(","0").replaceAll(")","0").replaceAll("?","0").replaceAll("'","0").replaceAll("@","0"))).remove()
                     compFilters.splice(compFilters.indexOf(filter),1)
                 }
-            } 
-            window.history.replaceState("object or string", "Title", writeURL());             
+            }
         }
+        window.history.replaceState("object or string", "Title", writeURL());
+
     });
 
 
@@ -60,13 +62,13 @@ function Pies(){
     var grp2 = dim2.group()
 
     commitsNamePie
-    .width(472)
-    .height(270)
+    .width(350)
+    .height(250)
     .dimension(dim2)
     .group(grp2)
-    .cx(300)
-    .cap(14)
-    .legend(dc.legend().x(17).y(3).itemHeight(13).gap(5))
+    .cx(225)
+    .cap(10)
+    .legend(dc.legend().x(0).y(3).itemHeight(13).gap(5))
     .ordering(function (d) { return -d.value; });
 
     commitsNamePie.on("filtered", function(chart,filter) {
@@ -93,9 +95,9 @@ function Pies(){
                     deveFilters.splice(deveFilters.indexOf(filter),1)
                 }
             }
-            window.history.replaceState("object or string", "Title", writeURL());             
-              
         }
+        window.history.replaceState("object or string", "Title", writeURL());
+
     });
 
     var dim3 = ndx.dimension(function(d){
@@ -105,13 +107,13 @@ function Pies(){
     var grp3 = dim3.group()
 
     repoPie
-    .width(472)
-    .height(270)
+    .width(350)
+    .height(250)
     .dimension(dim3)
     .group(grp3)
-    .cap(14)
-    .cx(300)
-    .legend(dc.legend().x(17).y(3).itemHeight(13).gap(5))
+    .cap(10)
+    .cx(225)
+    .legend(dc.legend().x(0).y(3).itemHeight(13).gap(5))
     .ordering(function (d) { return -d.value; });
 
     repoPie.on("filtered", function(chart,filter) {
@@ -138,9 +140,55 @@ function Pies(){
                     repoFilters.splice(repoFilters.indexOf(filter),1)
                 }
             }
-            window.history.replaceState("object or string", "Title", writeURL());             
-              
         }
+        window.history.replaceState("object or string", "Title", writeURL());
+
     });
+
+    var dim4 = ndx.dimension(function(d){
+        return d.proj;
+    })
+
+    var grp4 = dim4.group()
+
+    projPie
+    .width(350)
+    .height(250)
+    .dimension(dim4)
+    .group(grp4)
+    .cap(10)
+    .cx(225)
+    .legend(dc.legend().x(0).y(3).itemHeight(13).gap(5))
+    .ordering(function (d) { return -d.value; });
+
+    projPie.on("filtered", function(chart,filter) {
+        if(filter==null){
+            projFilters=[]
+            $("#filterProj").empty()
+        }else if(filter!="Others"){
+            if(filter.constructor==Array){
+                filter[0].forEach(function(element){
+                    if(projFilters.indexOf(element)==-1){
+                        $("#filterProj").append('<span id="filter-'+element.replaceAll(" ","0").replaceAll(".","0").replaceAll(",","0").replaceAll("(","0").replaceAll(")","0").replaceAll("?","0").replaceAll("'","0").replaceAll("@","0")+'"> '+element+' </span>')
+                        projFilters.push(element)
+                    }else{
+                        $('#filter-'+(element.replaceAll(" ","0").replaceAll(".","0").replaceAll(",","0").replaceAll("(","0").replaceAll(")","0").replaceAll("?","0").replaceAll("'","0").replaceAll("@","0"))).remove()
+                        projFilters.splice(projFilters.indexOf(element),1)
+                    }
+                })
+            }else{
+                if(projFilters.indexOf(filter)==-1){
+                    $("#filterProj").append('<span id="filter-'+filter.replaceAll(" ","0").replaceAll(".","0").replaceAll(",","0").replaceAll("(","0").replaceAll(")","0").replaceAll("?","0").replaceAll("'","0").replaceAll("@","0")+'"> '+filter+' </span>')
+                    projFilters.push(filter)
+                }else{
+                    $('#filter-'+(filter.replaceAll(" ","0").replaceAll(".","0").replaceAll(",","0").replaceAll("(","0").replaceAll(")","0").replaceAll("?","0").replaceAll("'","0").replaceAll("@","0"))).remove()
+                    projFilters.splice(projFilters.indexOf(filter),1)
+                }
+            }
+        }
+        window.history.replaceState("object or string", "Title", writeURL());
+
+    });
+
 
 }
