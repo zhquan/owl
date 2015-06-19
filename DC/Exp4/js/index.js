@@ -61,8 +61,8 @@ $(document).ready(function(){
 
         $.getJSON('json/random-proj.json', function (d) {
             scmProj = d;
-            d.values.forEach(function(element){
-                proj.push(element[1])
+            Object.keys(d).forEach(function(element){
+                proj.push(element)
             })
         })
 
@@ -249,8 +249,11 @@ function dcFormat(d){
         dic[names[7]] = val[7];
         dic['company'] = companiesLook[val[4]];
         dic['repo'] = scmRepo['values'][val[5]-1][1];
-        dic['proj'] = scmProj['values'][Math.floor(Math.random()*10)][1];
-
+        if(scmProj[Object.keys(scmProj)[0]].indexOf(dic['repo'])!=-1){
+            dic['proj']=Object.keys(scmProj)[0]
+        }else{
+            dic['proj']=Object.keys(scmProj)[1] 
+        }
         array.push(dic);
     });
     return array;
