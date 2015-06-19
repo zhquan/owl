@@ -3,6 +3,7 @@ function Pies(){
 	compPie = dc.pieChart('#chart1');
     commitsNamePie = dc.pieChart('#chart2');
     repoPie = dc.pieChart('#chart3');
+    projPie= dc.pieChart('#chart4')
 
     var dim = ndx.dimension(function(d){
         return d.company;
@@ -44,8 +45,9 @@ function Pies(){
                     compFilters.splice(compFilters.indexOf(filter),1)
                 }
             }
-            window.history.replaceState("object or string", "Title", writeURL());
         }
+        window.history.replaceState("object or string", "Title", writeURL());
+
     });
 
 
@@ -93,9 +95,9 @@ function Pies(){
                     deveFilters.splice(deveFilters.indexOf(filter),1)
                 }
             }
-            window.history.replaceState("object or string", "Title", writeURL());
-
         }
+        window.history.replaceState("object or string", "Title", writeURL());
+
     });
 
     var dim3 = ndx.dimension(function(d){
@@ -138,9 +140,27 @@ function Pies(){
                     repoFilters.splice(repoFilters.indexOf(filter),1)
                 }
             }
-            window.history.replaceState("object or string", "Title", writeURL());
-
         }
+        window.history.replaceState("object or string", "Title", writeURL());
+
     });
+
+    var dim4 = ndx.dimension(function(d){
+        return d.proj;
+    })
+
+    var grp4 = dim4.group()
+
+    projPie
+    .width(350)
+    .height(250)
+    .dimension(dim4)
+    .group(grp4)
+    .cap(10)
+    .cx(215)
+    .legend(dc.legend().x(0).y(3).itemHeight(13).gap(5))
+    .ordering(function (d) { return -d.value; });
+
+
 
 }
