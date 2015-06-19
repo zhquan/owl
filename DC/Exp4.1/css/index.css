@@ -1,0 +1,17 @@
+.dc-table-column._2 {
+	cursor: pointer;
+}
+
+.ui-autocomplete{
+		max-height: 500px;
+		overflow: hidden;
+}
+
+/*.panel {
+	border: none;
+	box-shadow: none;
+}*/
+
+.ui-autocomplete {
+	z-index: 1000;
+}
