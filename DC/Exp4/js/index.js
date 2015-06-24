@@ -34,6 +34,9 @@ var repoFilters=[]
 var deveFilters=[]
 var compFilters=[]
 var projFilters=[]
+
+var pieClickEvent = new Event('table');
+
 $(document).ready(function(){
 
     /*************** Download of JSON ***************/
@@ -258,7 +261,85 @@ function dcFormat(d){
     });
     return array;
 }
-
+/***************************  click Pie event and update tables **********************/
+//$('#tableOrg').on('updateTable', function(event, trigger){
+document.addEventListener('table', function (e) {
+	tableUpdate('click');
+	dc.redrawAll();
+}, false);
+function tableUpdate(type) {
+	var sizeTable;
+	if (type == 'reset'){
+		sizeTable = 7;
+		table.size(sizeTable);
+		tableRepo.size(sizeTable);
+		tableOrg.size(sizeTable);
+		tableAuth.size(sizeTable)
+	}
+	var order = -1;
+	var order2 = -1;
+	tableRepo
+        .dimension(repoDim)
+        .group(function (d) {return "";})
+        .columns([
+            {
+            	label: 'Repositories',
+                format: function(d){
+					order++;
+					return repoGrp.top(Infinity)[order].key;
+                }
+            },
+            {
+            	label: 'Commits',
+                format: function(d){
+					order2++;
+					return repoGrp.top(Infinity)[order2].value;
+                }
+            }
+        ]);
+	var orgOrderKey = -1;
+	var orgOrderValue = -1;
+	tableOrg
+		.dimension(orgDim)
+		.group(function (d) {return '';})
+		.columns([
+			{
+				label: 'Organizations',
+				format: function(d){
+					orgOrderKey++;
+					return orgGrp.top(Infinity)[orgOrderKey].key;
+				}
+			},
+			{
+				label: 'Commits',
+				format: function (d) {
+					orgOrderValue++;
+					return orgGrp.top(Infinity)[orgOrderValue].value;
+				}
+			}
+		]);
+	var authOrderKey = -1;
+    var authOrderValue = -1;
+    tableAuth
+        .dimension(orgDim)
+        .group(function (d) {return '';})
+        .columns([
+            {
+                label: 'Authors',
+                format: function(d){
+                    authOrderKey++;
+                    return authGrp.top(Infinity)[authOrderKey].key;
+                }
+            },
+            {
+                label: 'Commits',
+                format: function (d) {
+                    authOrderValue++;
+                    return authGrp.top(Infinity)[authOrderValue].value;
+                }
+            }
+        ]);
+}
 /************** Reset **************/
 
 function Reset(){
@@ -266,73 +347,7 @@ function Reset(){
     $.when(
         dc.filterAll()
     ).done(function(){
-        var order = -1;
-        var order2 = -1;
-        tableRepo
-            .dimension(repoDim)
-            .group(function (d) {return "";})
-            .size(7)
-            .columns([
-                {
-                    label: 'Repositories',
-                    format: function(d){
-                        order++;
-                        return repoGrp.top(Infinity)[order].key;
-                    }
-                },
-                {
-                    label: 'Commits',
-                    format: function(d){
-                        order2++;
-                        return repoGrp.top(Infinity)[order2].value;
-                    }
-                }
-            ]);
-        var orgOrderKey = -1;
-        var orgOrderValue = -1;
-        tableOrg
-            .dimension(orgDim)
-            .group(function (d) {return '';})
-            .size(7)
-            .columns([
-                {
-                    label: 'Organizations',
-                    format: function(d){
-                        orgOrderKey++;
-                        return orgGrp.top(Infinity)[orgOrderKey].key;
-                    }
-                },
-                {
-                    label: 'Commits',
-                    format: function (d) {
-                        orgOrderValue++;
-                        return orgGrp.top(Infinity)[orgOrderValue].value;
-                    }
-                }
-            ]);
-        var authOrderKey = -1;
-        var authOrderValue = -1;
-        tableAuth
-            .dimension(orgDim)
-            .group(function (d) {return '';})
-            .size(7)
-            .columns([
-                {
-                    label: 'Authors',
-                    format: function(d){
-                        authOrderKey++;
-                        return authGrp.top(Infinity)[authOrderKey].key;
-                    }
-                },
-                {
-                    label: 'Commits',
-                    format: function (d) {
-                        authOrderValue++;
-                        return authGrp.top(Infinity)[authOrderValue].value;
-                    }
-                }
-            ]);
-        table.size(7);
+        tableUpdate('reset')
         dc.redrawAll();
     })
 }

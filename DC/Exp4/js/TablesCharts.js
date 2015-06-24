@@ -79,10 +79,10 @@ function Tables(){
         .order(d3.ascending);
     table.on('renderlet', function(table) {
         table.selectAll('.dc-table-group').classed('info', true);
-        table.selectAll(".dc-table-column._2").on("click", function(d){
-            commitsNamePie.filter(d.name)
-            dc.redrawAll();
-        });
+//        table.selectAll(".dc-table-column._2").on("click", function(d){
+//            commitsNamePie.filter(d.name)
+//            dc.redrawAll();
+//        });
 
 		$(window).bind('scroll', function(){
 			if(($(this).scrollTop() == ($('body').outerHeight() - $(window).innerHeight())) || ($(this).scrollTop()-1 == ($('body').outerHeight() - $(window).innerHeight()))) {
@@ -217,10 +217,10 @@ function Tables(){
         
     tableOrg.on('renderlet', function(table) {
         tableOrg.selectAll('.dc-table-group').classed('info', true);
-        tableOrg.selectAll(".dc-table-column._2").on("click", function(d){
-            companyPie.filter(d.company)
-            dc.redrawAll();
-        });
+//        tableOrg.selectAll(".dc-table-column._2").on("click", function(d){
+//            companyPie.filter(d.company)
+//            dc.redrawAll();
+//        });
     });
 
 /********************************************************** Table Auth ********************************************************/

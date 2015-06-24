@@ -21,6 +21,11 @@ function Pies(){
     .legend(dc.legend().x(0).y(3).itemHeight(13).gap(5))
     .ordering(function (d) { return -d.value; });
 
+	compPie.on('renderlet', function(chart) {
+	  chart.selectAll('.pie-slice').on("click", function(d) {
+		document.dispatchEvent(pieClickEvent);
+	  });
+	});
     compPie.on("filtered", function(chart,filter) {
         if(filter==null){
             compFilters=[]
@@ -71,6 +76,11 @@ function Pies(){
     .legend(dc.legend().x(0).y(3).itemHeight(13).gap(5))
     .ordering(function (d) { return -d.value; });
 
+	commitsNamePie.on('renderlet', function(chart) {
+	  chart.selectAll('.pie-slice').on("click", function(d) {
+		document.dispatchEvent(pieClickEvent);
+	  });
+	});
     commitsNamePie.on("filtered", function(chart,filter) {
         if(filter==null){
             deveFilters=[]
@@ -116,6 +126,11 @@ function Pies(){
     .legend(dc.legend().x(0).y(3).itemHeight(13).gap(5))
     .ordering(function (d) { return -d.value; });
 
+	repoPie.on('renderlet', function(chart) {
+	  chart.selectAll('.pie-slice').on("click", function(d) {
+		document.dispatchEvent(pieClickEvent);
+	  });
+	});
     repoPie.on("filtered", function(chart,filter) {
         if(filter==null){
             repoFilters=[]
@@ -161,6 +176,11 @@ function Pies(){
     .legend(dc.legend().x(0).y(3).itemHeight(13).gap(5))
     .ordering(function (d) { return -d.value; });
 
+	projPie.on('renderlet', function(chart) {
+	  chart.selectAll('.pie-slice').on("click", function(d) {
+		document.dispatchEvent(pieClickEvent);
+	  });
+	});
     projPie.on("filtered", function(chart,filter) {
         if(filter==null){
             projFilters=[]
