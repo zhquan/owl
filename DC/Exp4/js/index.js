@@ -22,6 +22,7 @@ var authGrp;
 var repo = [];
 var org = [];
 var auth = [];
+var sizeTableInit;
 
 var companies=[];
 var companiesLook={}
@@ -36,7 +37,7 @@ var compFilters=[]
 var projFilters=[]
 
 var pieClickEvent = new Event('table');
-
+var timeRangeEvent = new Event('time');
 $(document).ready(function(){
 
     /*************** Download of JSON ***************/
@@ -82,6 +83,7 @@ $(document).ready(function(){
         commitsData.forEach(function (element) {
             element.date = dateFormat.parse(element.date);
             element.month = d3.time.month(element.date);
+			element.day = d3.time.day(element.date);
         });
 
         /*************** Pie charts ***************/
@@ -267,14 +269,16 @@ document.addEventListener('table', function (e) {
 	tableUpdate('click');
 	dc.redrawAll();
 }, false);
+document.addEventListener('time', function (e) {
+	tableUpdate('time');
+	dc.redrawAll();
+}, false);
 function tableUpdate(type) {
-	var sizeTable;
-	if (type == 'reset'){
-		sizeTable = 7;
-		table.size(sizeTable);
-		tableRepo.size(sizeTable);
-		tableOrg.size(sizeTable);
-		tableAuth.size(sizeTable)
+	if ((type == 'reset') || (type == 'time')){
+		table.size(sizeTableInit);
+		tableRepo.size(sizeTableInit);
+		tableOrg.size(sizeTableInit);
+		tableAuth.size(sizeTableInit);
 	}
 	var order = -1;
 	var order2 = -1;
@@ -286,6 +290,10 @@ function tableUpdate(type) {
             	label: 'Repositories',
                 format: function(d){
 					order++;
+console.log(order)
+					if ((type == 'time') && (order > repoGrp.top(Infinity).length-1)){
+						order = 0;
+					}
 					return repoGrp.top(Infinity)[order].key;
                 }
             },
@@ -293,6 +301,9 @@ function tableUpdate(type) {
             	label: 'Commits',
                 format: function(d){
 					order2++;
+					if ((type == 'time') && (order2 > repoGrp.top(Infinity).length-1)){
+						order2 = 0;
+					}
 					return repoGrp.top(Infinity)[order2].value;
                 }
             }
@@ -307,6 +318,9 @@ function tableUpdate(type) {
 				label: 'Organizations',
 				format: function(d){
 					orgOrderKey++;
+					if ((type == 'time') && (orgOrderKey > orgGrp.top(Infinity).length-1)){
+						orgOrderKey = 0;
+					}
 					return orgGrp.top(Infinity)[orgOrderKey].key;
 				}
 			},
@@ -314,6 +328,9 @@ function tableUpdate(type) {
 				label: 'Commits',
 				format: function (d) {
 					orgOrderValue++;
+					if ((type == 'time') && (orgOrderValue > orgGrp.top(Infinity).length-1)){
+						orgOrderValue = 0;
+					}
 					return orgGrp.top(Infinity)[orgOrderValue].value;
 				}
 			}
@@ -328,6 +345,9 @@ function tableUpdate(type) {
                 label: 'Authors',
                 format: function(d){
                     authOrderKey++;
+					if ((type == 'time') && (authOrderKey > authGrp.top(Infinity).length-1)){
+						authOrderKey = 0;
+					}
                     return authGrp.top(Infinity)[authOrderKey].key;
                 }
             },
@@ -335,6 +355,9 @@ function tableUpdate(type) {
                 label: 'Commits',
                 format: function (d) {
                     authOrderValue++;
+					if ((type == 'time') && (authOrderValue > authGrp.top(Infinity).length-1)){
+						authOrderValue = 0;
+					}
                     return authGrp.top(Infinity)[authOrderValue].value;
                 }
             }
@@ -351,7 +374,6 @@ function Reset(){
         dc.redrawAll();
     })
 }
-
 /**************** Generate URL by filters *****************/
 function writeURL(){
     var repoStrUrl='repo='
