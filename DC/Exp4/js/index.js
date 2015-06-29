@@ -63,7 +63,7 @@ $(document).ready(function(){
             scmCommit = d;
         }),
 
-        $.getJSON('json/random-proj.json', function (d) {
+        $.getJSON('json/scm-projects.json', function (d) {
             scmProj = d;
             Object.keys(d).forEach(function(element){
                 proj.push(element)
