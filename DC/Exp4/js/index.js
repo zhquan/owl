@@ -280,7 +280,26 @@ function tableUpdate(type) {
 		tableRepo.size(sizeTableInit);
 		tableOrg.size(sizeTableInit);
 		tableAuth.size(sizeTableInit);
-	}
+	} else if ((type == 'click') || (type == 'time')) {
+        var numero = $('.dc-data-count.dc-chart').html().split('<strong>')[1].split('</strong>')[0];
+		var total = parseInt(numero);
+		if (numero.split(',')[1] != undefined){
+			total = parseInt(numero.split(',')[0]+numero.split(',')[1]);
+		}
+        var sizeRepo = tableRepo.size();
+        var sizeOrg = tableOrg.size();
+        var sizeAuth = tableAuth.size();
+        if (sizeRepo > total) {
+            tableRepo.size(total);
+        }
+        if (sizeOrg > total) {
+            tableOrg.size(total);
+        }
+        if (sizeAuth > total) {
+            tableAuth.size(total);
+            table.size(total);
+        }
+    }
 	var order = -1;
 	var order2 = -1;
 	tableRepo
