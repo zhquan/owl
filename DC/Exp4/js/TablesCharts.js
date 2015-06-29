@@ -84,6 +84,7 @@ function Tables(){
 //            dc.redrawAll();
 //        });
 
+        sizeTableInit = 7;
 		while(true){
 			if($('body').outerHeight() > $(window).innerHeight()){
 				break;

@@ -25,7 +25,7 @@ function Time(){
     	.xUnits(d3.time.months)
 		.elasticY(true)
 	    .renderHorizontalGridLines(true)
-	    .brushOn(true)
+	    .brushOn(false)
 	    .group(commitGrp, 'Commit');
 
 	allSliderCommits

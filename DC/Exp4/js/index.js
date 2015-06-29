@@ -129,7 +129,6 @@ $(document).ready(function(){
 
         Tables()
 
-
         /***************Count****************/
 
         dc.dataCount('.dc-data-count')
@@ -270,11 +269,13 @@ document.addEventListener('table', function (e) {
 	dc.redrawAll();
 }, false);
 document.addEventListener('time', function (e) {
+console.log('aa');
 	tableUpdate('time');
+console.log('bb');
 	dc.redrawAll();
 }, false);
 function tableUpdate(type) {
-	if ((type == 'reset') || (type == 'time')){
+	if (type == 'reset'){
 		table.size(sizeTableInit);
 		tableRepo.size(sizeTableInit);
 		tableOrg.size(sizeTableInit);
@@ -283,15 +284,12 @@ function tableUpdate(type) {
 	var order = -1;
 	var order2 = -1;
 	tableRepo
-        .dimension(repoDim)
-        .group(function (d) {return "";})
         .columns([
             {
             	label: 'Repositories',
                 format: function(d){
 					order++;
-console.log(order)
-					if ((type == 'time') && (order > repoGrp.top(Infinity).length-1)){
+					if (order > tableRepo.size()-1){
 						order = 0;
 					}
 					return repoGrp.top(Infinity)[order].key;
@@ -301,7 +299,7 @@ console.log(order)
             	label: 'Commits',
                 format: function(d){
 					order2++;
-					if ((type == 'time') && (order2 > repoGrp.top(Infinity).length-1)){
+					if (order2 > tableRepo.size()-1){
 						order2 = 0;
 					}
 					return repoGrp.top(Infinity)[order2].value;
@@ -311,14 +309,12 @@ console.log(order)
 	var orgOrderKey = -1;
 	var orgOrderValue = -1;
 	tableOrg
-		.dimension(orgDim)
-		.group(function (d) {return '';})
 		.columns([
 			{
 				label: 'Organizations',
 				format: function(d){
 					orgOrderKey++;
-					if ((type == 'time') && (orgOrderKey > orgGrp.top(Infinity).length-1)){
+					if (orgOrderKey > tableOrg.size()-1){
 						orgOrderKey = 0;
 					}
 					return orgGrp.top(Infinity)[orgOrderKey].key;
@@ -328,7 +324,7 @@ console.log(order)
 				label: 'Commits',
 				format: function (d) {
 					orgOrderValue++;
-					if ((type == 'time') && (orgOrderValue > orgGrp.top(Infinity).length-1)){
+					if (orgOrderValue > tableOrg.size()-1){
 						orgOrderValue = 0;
 					}
 					return orgGrp.top(Infinity)[orgOrderValue].value;
@@ -338,14 +334,12 @@ console.log(order)
 	var authOrderKey = -1;
     var authOrderValue = -1;
     tableAuth
-        .dimension(orgDim)
-        .group(function (d) {return '';})
         .columns([
             {
                 label: 'Authors',
                 format: function(d){
                     authOrderKey++;
-					if ((type == 'time') && (authOrderKey > authGrp.top(Infinity).length-1)){
+					if (authOrderKey > tableAuth.size()-1){
 						authOrderKey = 0;
 					}
                     return authGrp.top(Infinity)[authOrderKey].key;
@@ -355,7 +349,7 @@ console.log(order)
                 label: 'Commits',
                 format: function (d) {
                     authOrderValue++;
-					if ((type == 'time') && (authOrderValue > authGrp.top(Infinity).length-1)){
+					if (authOrderValue > tableAuth.size()-1){
 						authOrderValue = 0;
 					}
                     return authGrp.top(Infinity)[authOrderValue].value;
