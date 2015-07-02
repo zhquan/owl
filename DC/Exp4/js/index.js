@@ -23,7 +23,6 @@ var repo = [];
 var org = [];
 var auth = [];
 var sizeTableInit;
-var init = true;
 
 var companies=[];
 var companiesLook={}
@@ -141,6 +140,7 @@ $(document).ready(function(){
                 all:'<strong>%filter-count</strong> commits out of <strong>%total-count</strong>'+
                 ' <button type="button" class="btn btn-primary btn-sm" onclick="Reset()">Reset all filters</button>'
             });
+
 
         dc.renderAll();
 
@@ -266,11 +266,13 @@ function dcFormat(d){
 //$('#tableOrg').on('updateTable', function(event, trigger){
 document.addEventListener('table', function (e) {
 	tableUpdate('click');
-	dc.redrawAll()
+	dc.redrawAll();
 }, false);
 document.addEventListener('time', function (e) {
+console.log('aa');
 	tableUpdate('time');
-    dc.redrawAll()
+console.log('bb');
+	dc.redrawAll();
 }, false);
 function tableUpdate(type) {
 	if (type == 'reset'){
@@ -288,33 +290,14 @@ function tableUpdate(type) {
         var sizeOrg = tableOrg.size();
         var sizeAuth = tableAuth.size();
         if (sizeRepo > total) {
-            var size = total;
-            if (total > repoGrp.top(Infinity).length) {
-                size = repoGrp.top(Infinity).length;
-            }
-            tableRepo.size(size);
-        } else if ((sizeRepo < total) && (total <= repoGrp.top(Infinity).length)) {
-            tableRepo.size(total)
+            tableRepo.size(total);
         }
         if (sizeOrg > total) {
-            var size = total;
-            if (total > orgGrp.top(Infinity).length) {
-                size = orgGrp.top(Infinity).length;
-            }
-            tableOrg.size(size);
-        } else if ((sizeOrg < total) && (total <= orgGrp.top(Infinity).length)) {
-            tableOrg.size(total)
+            tableOrg.size(total);
         }
         if (sizeAuth > total) {
-            var size = total;
-            if (total > authGrp.top(Infinity).length) {
-                size = authGrp.top(Infinity).length;
-            }
-            tableAuth.size(size);
-            table.size(size);
-        } else if ((sizeAuth < total) && (total <= authGrp.top(Infinity).length)) {
-            tableAuth.size(total)
-            table.size(total)
+            tableAuth.size(total);
+            table.size(total);
         }
     }
 	var order = -1;
@@ -400,7 +383,7 @@ function Reset(){
     $.when(
         dc.filterAll()
     ).done(function(){
-        tableUpdate('reset');
+        tableUpdate('reset')
         dc.redrawAll();
     })
 }
@@ -476,6 +459,6 @@ function readURL(){
             })
         }
 
-        dc.redrawAll();
+        dc.redrawAll()
     }
 }
