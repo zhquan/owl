@@ -23,7 +23,6 @@ var repo = [];
 var org = [];
 var auth = [];
 var sizeTableInit;
-var init = true;
 
 var companies=[];
 var companiesLook={}
@@ -130,6 +129,7 @@ $(document).ready(function(){
 
         Tables()
 
+
         /***************Count****************/
 
         dc.dataCount('.dc-data-count')
@@ -141,6 +141,7 @@ $(document).ready(function(){
                 all:'<strong>%filter-count</strong> commits out of <strong>%total-count</strong>'+
                 ' <button type="button" class="btn btn-primary btn-sm" onclick="Reset()">Reset all filters</button>'
             });
+
 
         dc.renderAll();
 
@@ -266,66 +267,31 @@ function dcFormat(d){
 //$('#tableOrg').on('updateTable', function(event, trigger){
 document.addEventListener('table', function (e) {
 	tableUpdate('click');
-	dc.redrawAll()
+	dc.redrawAll();
 }, false);
 document.addEventListener('time', function (e) {
 	tableUpdate('time');
-    dc.redrawAll()
+	dc.redrawAll();
 }, false);
 function tableUpdate(type) {
-	if (type == 'reset'){
+	if ((type == 'reset') || (type == 'time')){
 		table.size(sizeTableInit);
 		tableRepo.size(sizeTableInit);
 		tableOrg.size(sizeTableInit);
 		tableAuth.size(sizeTableInit);
-	} else if ((type == 'click') || (type == 'time')) {
-        var numero = $('.dc-data-count.dc-chart').html().split('<strong>')[1].split('</strong>')[0];
-		var total = parseInt(numero);
-		if (numero.split(',')[1] != undefined){
-			total = parseInt(numero.split(',')[0]+numero.split(',')[1]);
-		}
-        var sizeRepo = tableRepo.size();
-        var sizeOrg = tableOrg.size();
-        var sizeAuth = tableAuth.size();
-        if (sizeRepo > total) {
-            var size = total;
-            if (total > repoGrp.top(Infinity).length) {
-                size = repoGrp.top(Infinity).length;
-            }
-            tableRepo.size(size);
-        } else if ((sizeRepo < total) && (total <= repoGrp.top(Infinity).length)) {
-            tableRepo.size(total)
-        }
-        if (sizeOrg > total) {
-            var size = total;
-            if (total > orgGrp.top(Infinity).length) {
-                size = orgGrp.top(Infinity).length;
-            }
-            tableOrg.size(size);
-        } else if ((sizeOrg < total) && (total <= orgGrp.top(Infinity).length)) {
-            tableOrg.size(total)
-        }
-        if (sizeAuth > total) {
-            var size = total;
-            if (total > authGrp.top(Infinity).length) {
-                size = authGrp.top(Infinity).length;
-            }
-            tableAuth.size(size);
-            table.size(size);
-        } else if ((sizeAuth < total) && (total <= authGrp.top(Infinity).length)) {
-            tableAuth.size(total)
-            table.size(total)
-        }
-    }
+	}
 	var order = -1;
 	var order2 = -1;
 	tableRepo
+        .dimension(repoDim)
+        .group(function (d) {return "";})
         .columns([
             {
             	label: 'Repositories',
                 format: function(d){
 					order++;
-					if (order > tableRepo.size()-1){
+console.log(order)
+					if ((type == 'time') && (order > repoGrp.top(Infinity).length-1)){
 						order = 0;
 					}
 					return repoGrp.top(Infinity)[order].key;
@@ -335,7 +301,7 @@ function tableUpdate(type) {
             	label: 'Commits',
                 format: function(d){
 					order2++;
-					if (order2 > tableRepo.size()-1){
+					if ((type == 'time') && (order2 > repoGrp.top(Infinity).length-1)){
 						order2 = 0;
 					}
 					return repoGrp.top(Infinity)[order2].value;
@@ -345,12 +311,14 @@ function tableUpdate(type) {
 	var orgOrderKey = -1;
 	var orgOrderValue = -1;
 	tableOrg
+		.dimension(orgDim)
+		.group(function (d) {return '';})
 		.columns([
 			{
 				label: 'Organizations',
 				format: function(d){
 					orgOrderKey++;
-					if (orgOrderKey > tableOrg.size()-1){
+					if ((type == 'time') && (orgOrderKey > orgGrp.top(Infinity).length-1)){
 						orgOrderKey = 0;
 					}
 					return orgGrp.top(Infinity)[orgOrderKey].key;
@@ -360,7 +328,7 @@ function tableUpdate(type) {
 				label: 'Commits',
 				format: function (d) {
 					orgOrderValue++;
-					if (orgOrderValue > tableOrg.size()-1){
+					if ((type == 'time') && (orgOrderValue > orgGrp.top(Infinity).length-1)){
 						orgOrderValue = 0;
 					}
 					return orgGrp.top(Infinity)[orgOrderValue].value;
@@ -370,12 +338,14 @@ function tableUpdate(type) {
 	var authOrderKey = -1;
     var authOrderValue = -1;
     tableAuth
+        .dimension(orgDim)
+        .group(function (d) {return '';})
         .columns([
             {
                 label: 'Authors',
                 format: function(d){
                     authOrderKey++;
-					if (authOrderKey > tableAuth.size()-1){
+					if ((type == 'time') && (authOrderKey > authGrp.top(Infinity).length-1)){
 						authOrderKey = 0;
 					}
                     return authGrp.top(Infinity)[authOrderKey].key;
@@ -385,7 +355,7 @@ function tableUpdate(type) {
                 label: 'Commits',
                 format: function (d) {
                     authOrderValue++;
-					if (authOrderValue > tableAuth.size()-1){
+					if ((type == 'time') && (authOrderValue > authGrp.top(Infinity).length-1)){
 						authOrderValue = 0;
 					}
                     return authGrp.top(Infinity)[authOrderValue].value;
@@ -400,7 +370,7 @@ function Reset(){
     $.when(
         dc.filterAll()
     ).done(function(){
-        tableUpdate('reset');
+        tableUpdate('reset')
         dc.redrawAll();
     })
 }
@@ -476,6 +446,6 @@ function readURL(){
             })
         }
 
-        dc.redrawAll();
+        dc.redrawAll()
     }
 }

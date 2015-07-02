@@ -85,9 +85,6 @@ function Tables(){
 //        });
 
 		while(true){
-            if (!init) {
-                break;
-            }
 			if($('body').outerHeight() > $(window).innerHeight()){
 				break;
 			} else {
@@ -100,7 +97,7 @@ function Tables(){
 				sizeTableInit = table.size();
 			}
 		}
-        init = false;
+
 		$( window ).scroll(function() {
 			if(($(this).scrollTop() == ($('body').outerHeight() - $(window).innerHeight())) || ($(this).scrollTop()-1 == ($('body').outerHeight() - $(window).innerHeight()))) {
 			    var size = table.size();
