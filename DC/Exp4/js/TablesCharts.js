@@ -35,10 +35,10 @@ function Tables(){
         ]);
 
     tableRepo.on('renderlet', function(table) {
-        tableRepo.selectAll('.dc-table-group').classed('info', true);
-        tableRepo.selectAll(".dc-table-column._0").on("click", function(d){
-            repoPie.filter(d.repo)
-            dc.redrawAll();
+        table.selectAll('.dc-table-group').classed('info', true);
+        table.selectAll(".dc-table-column._0").on("click", function(d){
+            repoPie.filter($(this).html())
+            document.dispatchEvent(pieClickEvent);
         });
     });
 /********************************************************** Table ********************************************************/
@@ -47,12 +47,6 @@ function Tables(){
         .group(function (d) {return '';})
         .size(7)
         .columns([
-            {
-				label: 'Commit',
-				format: function(d) {
-					return d.id;
-				}
-			},
             {
 	            label: 'Date',
                 format: function(d){
@@ -79,10 +73,10 @@ function Tables(){
         .order(d3.descending);
     table.on('renderlet', function(table) {
         table.selectAll('.dc-table-group').classed('info', true);
-//        table.selectAll(".dc-table-column._2").on("click", function(d){
-//            commitsNamePie.filter(d.name)
-//            dc.redrawAll();
-//        });
+        table.selectAll(".dc-table-column._1").on("click", function(d){
+            authDim.filter(d.name)
+            document.dispatchEvent(pieClickEvent);
+        });
 
         sizeTableInit = 7;
 		while(true){
@@ -164,15 +158,21 @@ function Tables(){
         ]);
         
     tableOrg.on('renderlet', function(table) {
-        tableOrg.selectAll('.dc-table-group').classed('info', true);
-//        tableOrg.selectAll(".dc-table-column._2").on("click", function(d){
-//            companyPie.filter(d.company)
-//            dc.redrawAll();
-//        });
+        table.selectAll('.dc-table-group').classed('info', true);
+        table.selectAll(".dc-table-column._0").on("click", function(d){
+            companyPie.filter($(this).html())
+            document.dispatchEvent(pieClickEvent);
+        });
     });
 
 /********************************************************** Table Auth ********************************************************/
+    developDim = ndx.dimension(function (d) {
+        return d.name;
+    });
 
+    developDim.group().all().forEach(function(element){
+        users.push(element.key)
+    })
 	var authOrderKey = -1;
 	var authOrderVal = -1;
 
@@ -198,7 +198,11 @@ function Tables(){
         ]);
         
     tableAuth.on('renderlet', function(table) {
-        tableAuth.selectAll('.dc-table-group').classed('info', true);
+        table.selectAll('.dc-table-group').classed('info', true);
+        table.selectAll(".dc-table-column._0").on("click", function(d){
+            developDim.filter($(this).html());
+            document.dispatchEvent(pieClickEvent);
+        })
     });
 
 /************************************Update Repo Table *******************************/

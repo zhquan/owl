@@ -23,7 +23,7 @@ var repo = [];
 var org = [];
 var auth = [];
 var sizeTableInit;
-
+var developDim;
 var companies=[];
 var companiesLook={}
 companiesLook["array"]=[]
@@ -181,20 +181,19 @@ $(document).ready(function(){
                 if(company!=""){
                     this.value=""
                     compPie.filter(company)
-                    dc.redrawAll();
+                    document.dispatchEvent(pieClickEvent);
                 }
             }
 
         });
-
         $('#developersInput').keyup(function(e){
             if(e.keyCode == 13)
             {
                 var deve=this.value;
                 if(deve!=""){
                     this.value=""
-                    commitsNamePie.filter(deve)
-                    dc.redrawAll();
+                    developDim.filter(deve)
+                    document.dispatchEvent(pieClickEvent);
                 }
             }
 
@@ -207,7 +206,7 @@ $(document).ready(function(){
                 if(repo!=""){
                     this.value=""
                     repoPie.filter(repo)
-                    dc.redrawAll();
+                    document.dispatchEvent(pieClickEvent);
                 }
             }
 
@@ -220,14 +219,13 @@ $(document).ready(function(){
                 if(proj!=""){
                     this.value=""
                     projPie.filter(proj)
-                    dc.redrawAll();
+                    document.dispatchEvent(pieClickEvent);
                 }
             }
 
         });
 
     })
-
 });
 
 String.prototype.replaceAll = function(str1, str2, ignore)
@@ -263,7 +261,6 @@ function dcFormat(d){
     return array;
 }
 /***************************  click Pie event and update tables **********************/
-//$('#tableOrg').on('updateTable', function(event, trigger){
 document.addEventListener('table', function (e) {
 	tableUpdate('click');
 	dc.redrawAll();
@@ -383,6 +380,7 @@ function Reset(){
     $.when(
         dc.filterAll()
     ).done(function(){
+        developDim.filterAll();
         tableUpdate('reset')
         dc.redrawAll();
     })
@@ -458,7 +456,6 @@ function readURL(){
                 projPie.filter(unescape(element))
             })
         }
-
-        dc.redrawAll()
+        document.dispatchEvent(pieClickEvent);
     }
 }
