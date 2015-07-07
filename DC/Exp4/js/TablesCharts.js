@@ -185,14 +185,14 @@ function Tables(){
             label: 'Authors',
                 format: function(d){
                     authOrderKey++;
-					return orgGrp.top(Infinity)[authOrderKey].key;
+					return authGrp.top(Infinity)[authOrderKey].key;
                 }
             },
             {
                 label: 'Commits',
                 format: function (d) {
                     authOrderVal++;
-					return orgGrp.top(Infinity)[authOrderVal].value;
+					return authGrp.top(Infinity)[authOrderVal].value;
                 }
             }
         ]);
