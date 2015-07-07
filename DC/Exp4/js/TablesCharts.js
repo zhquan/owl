@@ -160,7 +160,8 @@ function Tables(){
     tableOrg.on('renderlet', function(table) {
         table.selectAll('.dc-table-group').classed('info', true);
         table.selectAll(".dc-table-column._0").on("click", function(d){
-            companyPie.filter($(this).html())
+console.log($(this).html())
+            compPie.filter($(this).html())
             document.dispatchEvent(pieClickEvent);
         });
     });
