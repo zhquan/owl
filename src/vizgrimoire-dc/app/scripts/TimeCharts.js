@@ -29,7 +29,7 @@ function Time(){
 	    .group(commitGrp, 'Commit');
 */
 	allSliderCommits
-		.width(1500).height(75)
+		.width(1400).height(75)
 		.margins({top: 0, right: 50, bottom: 20, left: 50})
         .dimension(monthDim)
         .group(commitGrp)
