@@ -14,11 +14,11 @@
     <!-- bower:css -->
     <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
     <link rel="stylesheet" href="bower_components/dcjs/dc.css" />
-    <link rel="stylesheet" href="bower_components/mocha/mocha.css" />
     <!-- endbower -->
     <!-- endbuild -->
     <!-- build:css(.tmp) styles/main.css -->
     <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" type="text/css" href="styles/jquery-ui.custom.min.css">
     <!-- endbuild -->
   </head>
   <body>
@@ -50,35 +50,35 @@
         <div class="col-md-2 col-md-push-10 hidden-xs hidden-sm">
           <div class="affix affix-top">
             <h2>Searching &amp; filtering</h2>
-            <p>Showing info about <b><span>{{filtered activity}}</span></b> out of <b><span>{{total activity}}</span></b></p>
-            <p class="text-center"><a href="#" type="button" class="btn btn-sm btn-primary">Reset filters</a></p>
+            <div id="chart5" style="margin-top: 0px; float:none;" class="dc-data-count"></div>
+            
             <hr>
             <form class="form-inline">
               <div class="form-group">
                 <label for="contributorsFilter"><h3>Contributors</h3></label>
-                <input type="text" class="form-control" id="contributorsFilter" placeholder="Contributor name">
+                <input type="text" class="form-control" id="developersInput" placeholder="Contributor name">
               </div>
             </form>
             <p><span>Filters applied:</span></p>
-            <img src="holder.js/100px60">
+            <span id="filterDeve"></span>
             <hr>
             <form class="form-inline">
               <div class="form-group">
                 <label for="organizationsFilter"><h3>Organizations</h3></label>
-                <input type="text" class="form-control" id="contributorsFilter" placeholder="Organization name">
+                <input type="text" class="form-control" id="companiesInput" placeholder="Organization name">
               </div>
             </form>
             <p><span>Filters applied:</span></p>
-            <img src="holder.js/100px60">
+            <span id="filterComp"></span>
             <hr>
             <form class="form-inline">
               <div class="form-group">
                 <label for="repositoriesFilter"><h3>Repositories</h3></label>
-                <input class="form-control" type="text" id="contributorsFilter" placeholder="Repository name">
+                <input class="form-control" type="text" id="reposInput" placeholder="Repository name">
               </div>
             </form>
             <p><span>Filters applied:</span></p>
-            <img src="holder.js/100px60">
+            <span id="filterRepo"></span>
           </div>
         </div>
 
@@ -100,7 +100,9 @@
             </div>
             <div class="col-xs-4 text-right">
               <h2>Date range</h2>
-              <p><b>{{init date - end date}}</b></p>
+              <p>
+                <span id="filterFrom">  2012-1-1 //</span><span id="filterTo"> 2015-12-31 </span>
+              </p>
               <p class="hidden-md hidden-lg"><a href="#" type="button" class="btn btn-sm btn-primary">Reset filters</a></p>
             </div>
           </div>
@@ -108,24 +110,25 @@
           <div class="row">
             <div class="col-xs-12">
               <h2>Activity</h2>
-              <img src="holder.js/100px125">
+              <div id="commitsChart"></div>
+      		  <div id="commitsSliderChart"></div>
             </div>
           </div>
 
           <div class="row">
             <div class="col-sm-4">
               <h2>Repositories distribution</h2>
-              <img src="holder.js/125x250">
+              <div id="repoPieChart" class="pieChart"></div>
               <img src="holder.js/250x250" class="img-circle">
             </div>
             <div class="col-sm-4">
               <h2>Organizations distribution</h2>
-              <img src="holder.js/125x250">
+              <div id="compPieChart" class="pieChart"></div>
               <img src="holder.js/250x250" class="img-circle">
             </div>
             <div class="col-sm-4">
               <h2>Contributors distribution</h2>
-              <img src="holder.js/125x250">
+              <div id="authPieChart" class="pieChart"></div>
               <img src="holder.js/250x250" class="img-circle">
             </div>
           </div>
@@ -133,22 +136,22 @@
           <div class="row">
             <div class="col-md-4">
               <h2>Repositories list</h2>
-              <img src="holder.js/100px500">
+              <table id="tableRepo" class="table table-hover dc-data-table"></table>
             </div>
             <div class="col-md-4">
               <h2>Organizations list</h2>
-              <img src="holder.js/100px500">
+              <table id="tableOrg" class="table table-hover dc-data-table"></table>
             </div>
             <div class="col-md-4">
               <h2>Contributors list</h2>
-              <img src="holder.js/100px500">
+              <table id="tableAuth" class="table table-hover dc-data-table"></table>
             </div>
           </div>
 
           <div class="row">
             <div class="col-sm-12">
               <h2>Commits list</h2>
-              <img src="holder.js/100px500">
+              <table id="table" class="table table-hover dc-data-table"></table>
             </div>
           </div>
         </div>
@@ -170,16 +173,18 @@
     <script src="bower_components/d3/d3.js"></script>
     <script src="bower_components/crossfilter/crossfilter.js"></script>
     <script src="bower_components/dcjs/dc.js"></script>
-    <script src="bower_components/chai/chai.js"></script>
-    <script src="bower_components/mocha/mocha.js"></script>
-    <script src="bower_components/holderjs/holder.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
 
 
     <!-- build:js scripts/main.js -->
-    <script src="scripts/main.js"></script>
+    <script type="text/javascript" src="scripts/colorbrewer.js"></script>
+    <script type="text/javascript" src="scripts/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="scripts/index.js"></script>
+    <script type="text/javascript" src="scripts/PiesCharts.js"></script>
+    <script type="text/javascript" src="scripts/TablesCharts.js"></script>
+    <script type="text/javascript" src="scripts/TimeCharts.js"></script>
     <!-- endbuild -->
 
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
