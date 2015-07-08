@@ -408,6 +408,7 @@ function Reset(){
         developDim.filterAll()
     ).done(function(){
         tableUpdate('reset')
+	$("#projectForm").val("All")
 	$("#filterComp").empty()
 	$("#filterDeve").empty()
 	$("#filterRepo").empty()
