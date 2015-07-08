@@ -408,6 +408,9 @@ function Reset(){
         developDim.filterAll()
     ).done(function(){
         tableUpdate('reset')
+	$("#filterComp").empty()
+	$("#filterDeve").empty()
+	$("#filterRepo").empty()
         dc.redrawAll();
     })
 }
