@@ -36,9 +36,13 @@ var deveFilters=[]
 var compFilters=[]
 var projFilters=[]
 
+var dimProj;
+
 var pieClickEvent = new Event('table');
 var timeRangeEvent = new Event('time');
 $(document).ready(function(){
+
+
 
     /*************** Download of JSON ***************/
 
@@ -76,6 +80,12 @@ $(document).ready(function(){
         commitsData = dcFormat(scmCommit);
         ndx = crossfilter(commitsData);
         all = ndx.groupAll();
+
+	/*************** General dimension for projects *********/
+
+	     dimProj = ndx.dimension(function(d){
+		return d.proj;
+	    })
         /*************** Time format ***************/
 
         var dateFormat = d3.time.format('%Y-%m-%dT%H:%M:%S');
@@ -136,10 +146,10 @@ $(document).ready(function(){
             .dimension(ndx)
             .group(all)
             .html({
-                some:'<strong>%filter-count</strong> commits out of <strong>%total-count</strong>'+
-                ' <button type="button" class="btn btn-primary btn-sm" onclick="Reset()">Reset all filters</button>',
-                all:'<strong>%filter-count</strong> commits out of <strong>%total-count</strong>'+
-                ' <button type="button" class="btn btn-primary btn-sm" onclick="Reset()">Reset all filters</button>'
+                some:'<span style="font-size:150%"><strong>%filter-count</strong> commits out of <strong>%total-count</strong>'+
+                ' <button type="button" class="btn btn-primary btn-sm" onclick="Reset()">Reset all filters</button></span>',
+                all:'<span style="font-size:150%"><strong>%filter-count</strong> commits out of <strong>%total-count</strong>'+
+                ' <button type="button" class="btn btn-primary btn-sm" onclick="Reset()">Reset all filters</button></span>'
             });
 
 
@@ -225,6 +235,15 @@ $(document).ready(function(){
             }
 
         });
+
+	$("#projectForm").change(function(e){
+		if($(this).val()=="All"){
+			dimProj.filterAll()
+		}else{
+			dimProj.filter($(this).val())
+		}
+		dc.redrawAll()
+	})
 
     })
 });
@@ -378,6 +397,7 @@ function Reset(){
 	
     $.when(
         dc.filterAll(),
+	dimProj.filterAll(""),
         developDim.filterAll()
     ).done(function(){
         tableUpdate('reset')
