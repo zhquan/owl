@@ -133,8 +133,12 @@
               <img src="holder.js/250x250" class="img-circle">
             </div>
           </div>
-
           <div class="row">
+            <button class="btn btn-primary btn-xs" type="button" data-toggle="collapse" data-target="#tables"
+                aria-expanded="true" aria-controls="">
+                Toggle tables view
+          </div>
+          <div class="row" id="tables">
             <div class="col-md-4">
               <h2>Repositories list</h2>
               <table id="tableRepo" class="table table-hover dc-data-table"></table>
@@ -148,8 +152,12 @@
               <table id="tableAuth" class="table table-hover dc-data-table"></table>
             </div>
           </div>
-
           <div class="row">
+            <button class="btn btn-primary btn-xs" type="button" data-toggle="collapse" data-target="#commitTable"
+                aria-expanded="true" aria-controls="">
+                Toggle commits table view
+          </div>
+          <div class="row" id="commitTable">
             <div class="col-sm-12">
               <h2>Commits list</h2>
               <table id="table" class="table table-hover dc-data-table"></table>

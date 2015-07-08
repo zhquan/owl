@@ -1,6 +1,6 @@
 function Time(){
 
-	allCommits = dc.lineChart('#commitsChart');
+//	allCommits = dc.lineChart('#commitsChart');
 	allSliderCommits = dc.barChart('#commitsSliderChart');
 
 	var monthDim = ndx.dimension(function(d){
@@ -11,7 +11,7 @@ function Time(){
 
 	var finishDate = monthDim.top(Infinity)[0];
 	var initDate = monthDim.top(Infinity)[monthDim.top(Infinity).length-1];
-
+/*
 	allCommits
 	    .renderArea(true)
 	    .width(1500)
@@ -27,9 +27,9 @@ function Time(){
 	    .renderHorizontalGridLines(true)
 	    .brushOn(false)
 	    .group(commitGrp, 'Commit');
-
+*/
 	allSliderCommits
-		.width(1500).height(40)
+		.width(1500).height(75)
 		.margins({top: 0, right: 50, bottom: 20, left: 50})
         .dimension(monthDim)
         .group(commitGrp)
@@ -42,7 +42,7 @@ function Time(){
 		.alwaysUseRounding(true);
 	allSliderCommits.yAxis().tickFormat(function(d) {return ''});
 
-	allCommits.on("filtered", function(chart,filter) {
+	allSliderCommits.on("filtered", function(chart,filter) {
 		if(filter != null){
 			$("#filterFrom").text("  "+filter[0].getFullYear()+"-"+parseInt(filter[0].getMonth()+1)+"-"+filter[0].getUTCDate()+" //")
 			$("#filterTo").text(" "+filter[1].getFullYear()+"-"+parseInt(filter[1].getMonth()+1)+"-"+filter[1].getUTCDate()+" ")
