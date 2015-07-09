@@ -1,10 +1,10 @@
 function Tables(){
 
 	
-	tableRepo = dc.dataTable('#tableRepo', 'time');
-    tableOrg = dc.dataTable('#tableOrg', 'time');
-    table = dc.dataTable('#table', 'time');
-	tableAuth = dc.dataTable('#tableAuth', 'time');
+	tableRepo = dc.dataTable('#tableRepo', 'tables');
+    tableOrg = dc.dataTable('#tableOrg', 'tables');
+    table = dc.dataTable('#table', 'commitsTable');
+	tableAuth = dc.dataTable('#tableAuth', 'tables');
 
     var dateDim = ndx.dimension(function (d) {
         return d.date;
@@ -78,7 +78,7 @@ function Tables(){
             document.dispatchEvent(pieClickEvent);
         });
 
-        
+        /*
 		while(true){
 			if($('body').outerHeight() > $(window).innerHeight()){
 				break;
@@ -130,7 +130,7 @@ function Tables(){
                     dc.redrawAll('other');
 				}
 			}
-		});
+		});*/
     });
 
 /********************************************************** Tabla Org ********************************************************/

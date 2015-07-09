@@ -152,7 +152,8 @@ $(document).ready(function(){
             });
 
 
-        dc.renderAll('time');
+        dc.renderAll('tables');
+        dc.renderAll('commitsTable');
         dc.renderAll('other');
 
 
@@ -281,16 +282,143 @@ function dcFormat(d){
     });
     return array;
 }
-/***************************  click event and update tables **********************/
+/***************************  click event **********************/
 document.addEventListener('table', function (e) {
 	tableUpdate('click');
-	dc.redrawAll('time');
+	dc.redrawAll('tables');
+    dc.redrawAll('commitsTable');
     dc.redrawAll('other');
 }, false);
 document.addEventListener('time', function (e) {
     dc.redrawAll('other');
 	tableUpdate('time');
+    dc.redrawAll('tables');
+    dc.redrawAll('commitsTable');
 }, false);
+
+$('#tablesMore').on('click', function () {
+    tableMore();
+});
+
+$('#commitsTableMore').on('click', function () {
+    table.size(table.size()+4);
+    dc.redrawAll('commitsTable');
+});
+/************************************ when you click see more table *******************************/
+function tableMore() {
+    var size = tableAuth.size();
+	var numero = $('.dc-data-count.dc-chart').html().split('<strong>')[1].split('</strong>')[0];
+	var total = parseInt(numero);
+	if (numero.split(',')[1] != undefined){
+		total = parseInt(numero.split(',')[0]+numero.split(',')[1]);
+	}
+	if (size < total){
+		var sizeRepo = size;
+		var sizeOrg = size;
+		var sizeAuth = size;
+		if ((size+4) < repoGrp.top(Infinity).length){
+			sizeRepo = size+4;
+		} else {
+			sizeRepo = repoGrp.top(Infinity).length;
+		}
+		updateRepo(sizeRepo);
+        if ((size+4) < orgGrp.top(Infinity).length) {
+			sizeOrg = size+4;
+		} else {
+			sizeOrg = orgGrp.top(Infinity).length;
+		}
+		updateOrg(sizeOrg);
+
+		if ((size+4) < authGrp.top(Infinity).length) {
+			sizeAuth = size+4;
+		} else {
+			sizeAuth = authGrp.top(Infinity).length;
+		}
+		updateAuth(sizeAuth);
+		dc.redrawAll('tables');
+	}
+}
+/************************************Update Repo Table *******************************/
+function updateRepo(sizeRepo){
+	var repoOrderKey = -1;
+	var repoOrderValue = -1;
+
+	tableRepo
+		.size(sizeRepo)
+		.columns([
+			{
+				label: 'Repositories',
+				format: function(d){
+					repoOrderKey++;
+					if (repoGrp.top(Infinity).length-1 < repoOrderKey) {
+						repoOrderKey = repoGrp.top(Infinity).length-1
+					}
+					return repoGrp.top(Infinity)[repoOrderKey].key;
+				}
+			},
+			{
+				label: 'Commits',
+				format: function(d){
+					repoOrderValue++;
+					if (repoGrp.top(Infinity).length-1 < repoOrderValue) {
+						repoOrderValue = repoGrp.top(Infinity).length-1
+					}
+					return repoGrp.top(Infinity)[repoOrderValue].value;
+				}
+			}
+		]);
+}
+/************************************ Update Org Table *******************************/
+function updateOrg(sizeOrg){ 
+	var orgOrderKey = -1;
+	var orgOrderValue = -1;
+	tableOrg
+		.dimension(orgDim)
+		.group(function (d) {return '';})
+		.size(sizeOrg)
+		.columns([
+			{
+				label: 'Organizations',
+				format: function(d){
+					orgOrderKey++;
+					return orgGrp.top(Infinity)[orgOrderKey].key;
+				}
+			},
+			{
+				label: 'Commits',
+				format: function (d) {
+					orgOrderValue++;
+					return orgGrp.top(Infinity)[orgOrderValue].value;
+				}
+			}
+		]);
+}
+/************************************ Update Org Table *******************************/
+function updateAuth(sizeAuth){
+	var authOrderKey = -1;
+	var authOrderValue = -1;
+	tableAuth
+		.dimension(orgDim)
+		.group(function (d) {return '';})
+		.size(sizeAuth)
+		.columns([
+			{
+				label: 'Authors',
+				format: function(d){
+					authOrderKey++;
+					return authGrp.top(Infinity)[authOrderKey].key;
+				}
+			},
+			{
+				label: 'Commits',
+				format: function (d) {
+					authOrderValue++;
+					return authGrp.top(Infinity)[authOrderValue].value;
+				}
+			}
+		]);
+}
+/************************************ Update Table  when you click *******************************/
 function tableUpdate(type) {
 	var zero = false;
 	if (type == 'reset'){
@@ -306,17 +434,26 @@ function tableUpdate(type) {
 		}
         if (total == 0) {
             zero = true;
+            table.size(0);
+            tableRepo.size(0);
+            tableAuth.size(0);
+            tableOrg.size(0);
+        } else if ((total > 7) && (table.size() == 0)) {
+            table.size(7);
+            tableRepo.size(7);
+            tableAuth.size(7);
+            tableOrg.size(7);
         } else {
             var sizeRepo = tableRepo.size();
             var sizeOrg = tableOrg.size();
             var sizeAuth = tableAuth.size();
-            if (sizeRepo > total) {
+            if ((sizeRepo => total) && (total < 7)) {
                 tableRepo.size(total);
             }
-            if (sizeOrg > total) {
+            if ((sizeOrg => total) && (total < 7)) {
                 tableOrg.size(total);
             }
-            if (sizeAuth > total) {
+            if ((sizeAuth => total) && (total < 7)) {
                 tableAuth.size(total);
                 table.size(total);
             }
@@ -398,7 +535,8 @@ function tableUpdate(type) {
                     }
                 }
             ]);
-        dc.redrawAll('time');
+//        dc.redrawAll('tables');
+//        dc.redrawAll('commitsTable');
     }
 }
 /************** Reset **************/
@@ -406,8 +544,9 @@ function tableUpdate(type) {
 function Reset(){
 	
     $.when(
-        dc.filterAll('time'),
+        dc.filterAll('tables'),
         dc.filterAll('other'),
+        dc.filterAll('commitsTable'),
     	dimProj.filterAll("")
     ).done(function(){
         tableUpdate('reset')
@@ -415,7 +554,8 @@ function Reset(){
 	    $("#filterComp").empty()
 	    $("#filterDeve").empty()
 	    $("#filterRepo").empty()
-        dc.redrawAll('time');
+        dc.redrawAll('tables');
+        dc.redrawAll('commitsTable');
         dc.redrawAll('other');
     })
 }
