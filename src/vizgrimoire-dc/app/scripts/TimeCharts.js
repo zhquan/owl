@@ -1,7 +1,7 @@
 function Time(){
 
 //	allCommits = dc.lineChart('#commitsChart');
-	allSliderCommits = dc.barChart('#commitsSliderChart');
+	allSliderCommits = dc.barChart('#commitsSliderChart', 'other');
 
 	var monthDim = ndx.dimension(function(d){
             return d.month;

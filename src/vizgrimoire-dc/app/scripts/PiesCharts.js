@@ -1,9 +1,9 @@
 function Pies(){
 
-	compPie = dc.pieChart('#compPieChart');
-    commitsNamePie = dc.pieChart('#authPieChart');
-    repoPie = dc.pieChart('#repoPieChart');
-    projPie= dc.pieChart('#projPieChart')
+	compPie = dc.pieChart('#compPieChart', 'other');
+    commitsNamePie = dc.pieChart('#authPieChart', 'other');
+    repoPie = dc.pieChart('#repoPieChart', 'other');
+    projPie= dc.pieChart('#projPieChart', 'other');
 
     var dim = ndx.dimension(function(d){
         return d.company;

@@ -1,10 +1,10 @@
 function Tables(){
 
 	
-	tableRepo = dc.dataTable('#tableRepo');
-    tableOrg = dc.dataTable('#tableOrg');
-    table = dc.dataTable('#table');
-	tableAuth = dc.dataTable('#tableAuth');
+	tableRepo = dc.dataTable('#tableRepo', 'time');
+    tableOrg = dc.dataTable('#tableOrg', 'time');
+    table = dc.dataTable('#table', 'time');
+	tableAuth = dc.dataTable('#tableAuth', 'time');
 
     var dateDim = ndx.dimension(function (d) {
         return d.date;
@@ -88,7 +88,8 @@ function Tables(){
 				updateRepo(sizeTable+10);
 				updateOrg(sizeTable+10);
 				updateAuth(sizeTable+10);
-				dc.redrawAll();
+				dc.redrawAll('time');
+                dc.redrawAll('other');
 				sizeTableInit = table.size();
 			}
 		}
@@ -125,7 +126,8 @@ function Tables(){
 						sizeAuth = authGrp.top(Infinity).length;
 					}
 					updateAuth(sizeAuth);
-					dc.redrawAll();
+					dc.redrawAll('time');
+                    dc.redrawAll('other');
 				}
 			}
 		});

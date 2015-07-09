@@ -23,7 +23,6 @@ var repo = [];
 var org = [];
 var auth = [];
 var sizeTableInit;
-var developDim;
 var companies=[];
 var companiesLook={}
 companiesLook["array"]=[]
@@ -142,7 +141,7 @@ $(document).ready(function(){
 
         /***************Count****************/
 
-        dc.dataCount('.dc-data-count')
+        dc.dataCount('.dc-data-count', 'other')
             .dimension(ndx)
             .group(all)
             .html({
@@ -153,7 +152,8 @@ $(document).ready(function(){
             });
 
 
-        dc.renderAll();
+        dc.renderAll('time');
+        dc.renderAll('other');
 
 
         /**************** Redraw URL ************/
@@ -203,7 +203,7 @@ $(document).ready(function(){
                 var deve=this.value;
                 if(deve!=""){
                     this.value=""
-                    developDim.filter(deve)
+                    commitsNamePie.filter(deve)
                     document.dispatchEvent(pieClickEvent);
                 }
             }
@@ -242,7 +242,8 @@ $(document).ready(function(){
 		}else{
 			dimProj.filter($(this).val())
 		}
-		dc.redrawAll()
+		dc.redrawAll('time');
+        dc.redrawAll('other');
 	})
 
     })
@@ -280,14 +281,15 @@ function dcFormat(d){
     });
     return array;
 }
-/***************************  click Pie event and update tables **********************/
+/***************************  click event and update tables **********************/
 document.addEventListener('table', function (e) {
 	tableUpdate('click');
-	dc.redrawAll();
+	dc.redrawAll('time');
+    dc.redrawAll('other');
 }, false);
 document.addEventListener('time', function (e) {
+    dc.redrawAll('other');
 	tableUpdate('time');
-	dc.redrawAll();
 }, false);
 function tableUpdate(type) {
 	var zero = false;
@@ -302,7 +304,7 @@ function tableUpdate(type) {
 		if (number.split(',')[1] != undefined){
 			total = parseInt(number.split(',')[0]+number.split(',')[1]);
 		}
-        if (number == 0) {
+        if (total == 0) {
             zero = true;
         } else {
             var sizeRepo = tableRepo.size();
@@ -396,6 +398,7 @@ function tableUpdate(type) {
                     }
                 }
             ]);
+        dc.redrawAll('time');
     }
 }
 /************** Reset **************/
@@ -403,16 +406,17 @@ function tableUpdate(type) {
 function Reset(){
 	
     $.when(
-        dc.filterAll(),
-	dimProj.filterAll(""),
-        developDim.filterAll()
+        dc.filterAll('time'),
+        dc.filterAll('other'),
+    	dimProj.filterAll("")
     ).done(function(){
         tableUpdate('reset')
-	$("#projectForm").val("All")
-	$("#filterComp").empty()
-	$("#filterDeve").empty()
-	$("#filterRepo").empty()
-        dc.redrawAll();
+	    $("#projectForm").val("All")
+	    $("#filterComp").empty()
+	    $("#filterDeve").empty()
+	    $("#filterRepo").empty()
+        dc.redrawAll('time');
+        dc.redrawAll('other');
     })
 }
 /**************** Generate URL by filters *****************/
