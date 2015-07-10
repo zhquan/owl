@@ -247,7 +247,10 @@ $(document).ready(function(){
 		}
 		
 		dc.redrawAll('time');
-        	dc.redrawAll('other');
+        dc.redrawAll('other');
+        tableUpdate('click');
+        dc.redrawAll('tables');
+        dc.redrawAll('commitsTable');
 		window.history.replaceState("object or string", "Title", writeURL());
 	})
 
