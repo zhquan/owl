@@ -323,7 +323,7 @@ $('#commitsTableMore').on('click', function () {
 /************************************ when you click see more table *******************************/
 function tableMore() {
     var size = tableAuth.size();
-	var numero = $('.dc-data-count.dc-chart').html().split('<strong>')[1].split('</strong>')[0];
+	var numero = $('.text-center.dc-data-count.dc-chart').html().split('>')[1].split('<')[0];
 	var total = parseInt(numero);
 	if (numero.split(',')[1] != undefined){
 		total = parseInt(numero.split(',')[0]+numero.split(',')[1]);
