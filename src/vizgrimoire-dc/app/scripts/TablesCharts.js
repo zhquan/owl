@@ -203,7 +203,7 @@ console.log($(this).html())
     tableAuth.on('renderlet', function(table) {
         table.selectAll('.dc-table-group').classed('info', true);
         table.selectAll(".dc-table-column._0").on("click", function(d){
-            developDim.filter($(this).html());
+            commitsNamePie.filter($(this).html());
             document.dispatchEvent(pieClickEvent);
         })
     });
