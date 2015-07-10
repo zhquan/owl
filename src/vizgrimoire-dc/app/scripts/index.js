@@ -42,7 +42,7 @@ var timeRangeEvent = new Event('time');
 $(document).ready(function(){
 
   $("#shareOnTW").click(function(){
-    window.location.href = "https://twitter.com/share?url="+encodeURIComponent(document.URL)+"&text=Play with new "+document.title+"&via=bitergia&hashtags=metrics,development";
+    window.location.href = "https://twitter.com/share?url="+encodeURIComponent(document.URL)+"&text=Play with "+document.title+"&via=bitergia&hashtags=metrics,development";
   });
 
   $("#shareUrl").click(function(){
