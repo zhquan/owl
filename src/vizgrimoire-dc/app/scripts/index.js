@@ -41,6 +41,14 @@ var pieClickEvent = new Event('table');
 var timeRangeEvent = new Event('time');
 $(document).ready(function(){
 
+  $("#shareOnTW").click(function(){
+    window.location.href = "https://twitter.com/share?url="+encodeURIComponent(document.URL)+"&text=Play with new "+document.title+"&via=bitergia&hashtags=metrics,development";
+  });
+
+  $("#shareUrl").click(function(){
+    window.prompt("Copy to clipboard: CTRL+C / CMD+C, Enter", document.URL);
+  })
+
 
 
     /*************** Download of JSON ***************/
@@ -238,7 +246,7 @@ $(document).ready(function(){
         });
 
 	$("#projectForm").change(function(e){
-		
+
 		if($(this).val()=="All"){
 			dimProj.filterAll()
 			projFilters=[]
@@ -637,7 +645,7 @@ function readURL(){
         if(projStrUrl[0]!=""){
             dimProj.filter(unescape(projStrUrl[0]))
 	    $("#projectForm").val(unescape(projStrUrl[0]))
-           
+
         }
         document.dispatchEvent(pieClickEvent);
     }
