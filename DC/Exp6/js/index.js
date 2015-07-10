@@ -4,6 +4,7 @@ var dc_commits = [];
 var dc_commits_month = [];
 var auth_names = {};
 var repo_names = {};
+var tz = {};
 
 var getting_commits =  $.getJSON('json/scm-commits.json');
 var getting_orgs = $.getJSON('json/scm-orgs.json');
@@ -18,13 +19,13 @@ function load_commits (commits, orgs, repos, auths) {
         repo_names[value[0]] = value[1];
     });
     auths.values.forEach(function (value) {
-        auth_names[value[2]] = value[1];
+        auth_names[value[3]] = value[1];
     });
     commits.values.forEach(function (value) {
 	var record = {}
 	commits.names.forEach(function (name, index) {
 	    if (name == "date") {
-		var date = new Date(value[index]*1000);
+		    var date = new Date(value[index]*1000);
 		    record[name] = date;
 		    record.month = new Date(date.getFullYear(), date.getMonth(), 1);
 		    record.hour = date.getHours();
@@ -37,8 +38,11 @@ function load_commits (commits, orgs, repos, auths) {
         } else if (name == 'author') {
             record[name] = value[index];
             record.auth_name = auth_names[value[index]];
-	    } else {
-		record[name] = value[index];
+	    } else if (name == 'tz') {
+            record[name] = value[index];
+            record.tz = tz[value[index]];
+        } else {
+    		record[name] = value[index];
 	    }
 	});
 	dc_commits.push(record);
@@ -144,10 +148,8 @@ console.log('slider')
 $(document).ready(function(){
     $.when(getting_commits, getting_orgs, getting_repos, getting_auths).done(function (commits, orgs, repos, auths) {
 	// Element 0 of the array contains the data
-console.log(repos)
-console.log(auths)
+console.log(commits)
 	    load_commits(commits[0], orgs[0], repos[0], auths[0]);
 	    draw_charts();
-console.log('fin')
     })
 });
