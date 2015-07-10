@@ -407,7 +407,7 @@ function updateAuth(sizeAuth){
 		.size(sizeAuth)
 		.columns([
 			{
-				label: 'Authors',
+				label: 'Developers',
 				format: function(d){
 					authOrderKey++;
 					return authGrp.top(Infinity)[authOrderKey].key;
@@ -519,7 +519,7 @@ function tableUpdate(type) {
         tableAuth
             .columns([
                 {
-                    label: 'Authors',
+                    label: 'Developers',
                     format: function(d){
                         authOrderKey++;
 					    if (authOrderKey > tableAuth.size()-1){

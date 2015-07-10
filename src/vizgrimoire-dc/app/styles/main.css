@@ -28,3 +28,8 @@ h1, h2, h3, h4, h5 , h6 {
   padding-bottom: 0.1em;
   font-weight: bold;
 }
+
+#tableRepo .dc-table-column._0, #tableAuth .dc-table-column._0, #tableOrg .dc-table-column._0, #table .dc-table-column._1{
+    cursor: pointer;
+    cursor: hand;
+}

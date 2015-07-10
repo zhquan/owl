@@ -53,7 +53,12 @@ function Tables(){
                     return d.date.toISOString(); 
                 }
             },
-            'name',
+            {
+                label: 'Developer',
+                format: function(d){
+                    return d.name;
+                }
+            },
 			{
 				label: 'Organization',
 				format: function(d) {
@@ -74,7 +79,7 @@ function Tables(){
     table.on('renderlet', function(table) {
         table.selectAll('.dc-table-group').classed('info', true);
         table.selectAll(".dc-table-column._1").on("click", function(d){
-            authDim.filter(d.name)
+            commitsNamePie.filter(d.name)
             document.dispatchEvent(pieClickEvent);
         });
 
@@ -162,20 +167,19 @@ function Tables(){
     tableOrg.on('renderlet', function(table) {
         table.selectAll('.dc-table-group').classed('info', true);
         table.selectAll(".dc-table-column._0").on("click", function(d){
-console.log($(this).html())
             compPie.filter($(this).html())
             document.dispatchEvent(pieClickEvent);
         });
     });
 
 /********************************************************** Table Auth ********************************************************/
-    developDim = ndx.dimension(function (d) {
+    /*developDim = ndx.dimension(function (d) {
         return d.name;
     });
 
     developDim.group().all().forEach(function(element){
         users.push(element.key)
-    })
+    })*/
 	var authOrderKey = -1;
 	var authOrderVal = -1;
 
@@ -185,7 +189,7 @@ console.log($(this).html())
         .size(7)
         .columns([
             {
-            label: 'Authors',
+            label: 'Developers',
                 format: function(d){
                     authOrderKey++;
 					return authGrp.top(Infinity)[authOrderKey].key;
@@ -274,7 +278,7 @@ console.log($(this).html())
 			.size(sizeAuth)
 			.columns([
 				{
-					label: 'Authors',
+					label: 'Developers',
 					format: function(d){
 						authOrderKey++;
 						return authGrp.top(Infinity)[authOrderKey].key;
