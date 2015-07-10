@@ -145,10 +145,10 @@ $(document).ready(function(){
             .dimension(ndx)
             .group(all)
             .html({
-                some:'<span style="font-size:150%"><strong>%filter-count</strong> commits out of <strong>%total-count</strong>'+
-                ' <button type="button" class="btn btn-primary btn-sm" onclick="Reset()">Reset all filters</button></span>',
-                all:'<span style="font-size:150%"><strong>%filter-count</strong> commits out of <strong>%total-count</strong>'+
-                ' <button type="button" class="btn btn-primary btn-sm" onclick="Reset()">Reset all filters</button></span>'
+                some:'<strong style="font-size:150%">%filter-count</strong> commits out of <strong style="font-size:150%">%total-count</strong>'+
+                ' <button type="button" class="btn btn-primary btn-sm" onclick="Reset()">Reset all filters</button>',
+                all:'<strong style="font-size:150%">%filter-count</strong> commits out of <strong style="font-size:150%">%total-count</strong>'+
+                ' <button type="button" class="btn btn-primary btn-sm" onclick="Reset()">Reset all filters</button>'
             });
 
 
@@ -245,7 +245,7 @@ $(document).ready(function(){
 			dimProj.filter($(this).val())
 			projFilters[0]=($(this).val())
 		}
-		
+
 		dc.redrawAll('time');
         	dc.redrawAll('other');
 		window.history.replaceState("object or string", "Title", writeURL());
@@ -280,7 +280,7 @@ function dcFormat(d){
         if(scmProj[Object.keys(scmProj)[0]].indexOf(dic['repo'])!=-1){
             dic['proj']=Object.keys(scmProj)[0]
         }else{
-            dic['proj']=Object.keys(scmProj)[1] 
+            dic['proj']=Object.keys(scmProj)[1]
         }
         array.push(dic);
     });
@@ -373,7 +373,7 @@ function updateRepo(sizeRepo){
 		]);
 }
 /************************************ Update Org Table *******************************/
-function updateOrg(sizeOrg){ 
+function updateOrg(sizeOrg){
 	var orgOrderKey = -1;
 	var orgOrderValue = -1;
 	tableOrg
@@ -546,7 +546,7 @@ function tableUpdate(type) {
 /************** Reset **************/
 
 function Reset(){
-	
+
     $.when(
         dc.filterAll('tables'),
         dc.filterAll('other'),
@@ -565,7 +565,7 @@ function Reset(){
 }
 /**************** Generate URL by filters *****************/
 function writeURL(){
-	
+
     var repoStrUrl='repo='
     repoFilters.forEach(function(element){
         if(repoFilters.indexOf(element)==repoFilters.length-1){
