@@ -240,11 +240,15 @@ $(document).ready(function(){
 	$("#projectForm").change(function(e){
 		if($(this).val()=="All"){
 			dimProj.filterAll()
+			projFilters=[]
 		}else{
 			dimProj.filter($(this).val())
+			projFilters[0]=($(this).val())
 		}
+		
 		dc.redrawAll('time');
-        dc.redrawAll('other');
+        	dc.redrawAll('other');
+		window.history.replaceState("object or string", "Title", writeURL());
 	})
 
     })
@@ -561,6 +565,7 @@ function Reset(){
 }
 /**************** Generate URL by filters *****************/
 function writeURL(){
+	
     var repoStrUrl='repo='
     repoFilters.forEach(function(element){
         if(repoFilters.indexOf(element)==repoFilters.length-1){
