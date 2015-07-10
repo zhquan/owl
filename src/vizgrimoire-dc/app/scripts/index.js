@@ -238,6 +238,7 @@ $(document).ready(function(){
         });
 
 	$("#projectForm").change(function(e){
+		
 		if($(this).val()=="All"){
 			dimProj.filterAll()
 			projFilters=[]
@@ -247,7 +248,10 @@ $(document).ready(function(){
 		}
 
 		dc.redrawAll('time');
-        	dc.redrawAll('other');
+		dc.redrawAll('other');
+		tableUpdate('click');
+		dc.redrawAll('tables');
+		dc.redrawAll('commitsTable');
 		window.history.replaceState("object or string", "Title", writeURL());
 	})
 
@@ -631,9 +635,9 @@ function readURL(){
         }
 
         if(projStrUrl[0]!=""){
-            projStrUrl.forEach(function(element){
-                projPie.filter(unescape(element))
-            })
+            dimProj.filter(unescape(projStrUrl[0]))
+	    $("#projectForm").val(unescape(projStrUrl[0]))
+           
         }
         document.dispatchEvent(pieClickEvent);
     }
