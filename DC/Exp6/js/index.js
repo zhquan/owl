@@ -53,6 +53,7 @@ function load_commits (commits, orgs, repos, auths) {
 
 function draw_charts () {
     var ndx = crossfilter(dc_commits);
+    var all = ndx.groupAll();
     var org_dim = ndx.dimension(function(d){
         return d.org_name;
     });
@@ -342,6 +343,17 @@ function draw_charts () {
         table.selectAll('.dc-table-group').classed('info', true);
     });
 
+    dc.dataCount('.dc-data-count')
+        .dimension(ndx)
+        .group(all)
+        .html({
+            some:'<strong>%filter-count</strong> commits out of <strong>%total-count</strong>'+
+            ' <button type="button" class="btn btn-primary btn-sm" onclick="Reset()">Reset all filters</button>',
+            all:'<strong>%filter-count</strong> commits out of <strong>%total-count</strong>'+
+            ' <button type="button" class="btn btn-primary btn-sm" onclick="Reset()">Reset all filters</button>'
+        });
+
+
     dc.renderAll();
 };
 
@@ -458,6 +470,14 @@ function tableUpdate(type) {
                 }
             }
         ]);
+}
+function Reset(){
+    $.when(
+        dc.filterAll()
+    ).done(function(){
+        tableUpdate('reset')
+        dc.redrawAll();
+    })
 }
 $(document).ready(function(){
     $.when(getting_commits, getting_orgs, getting_repos, getting_auths).done(function (commits, orgs, repos, auths) {
