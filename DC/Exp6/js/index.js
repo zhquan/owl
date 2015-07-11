@@ -60,8 +60,8 @@ function draw_charts () {
     var org_grp = org_dim.group();
     
     var org_chart = dc.pieChart('#compPieChart');
-    org_chart.width(350)
-	    .height(250)
+    org_chart.width(450)
+	    .height(300)
 	    .transitionDuration(1000)
 	    .dimension(org_dim)
 	    .group(org_grp)
@@ -81,8 +81,8 @@ function draw_charts () {
     
     var repo_chart = dc.pieChart('#repoPieChart');
     repo_chart
-        .width(350)
-	    .height(250)
+        .width(450)
+	    .height(300)
 	    .transitionDuration(1000)
 	    .dimension(repo_dim)
 	    .group(repo_grp)
@@ -101,8 +101,8 @@ function draw_charts () {
     var auth_grp = auth_dim.group();
     var auth_chart = dc.pieChart('#authPieChart');
     auth_chart
-        .width(350)
-	    .height(250)
+        .width(450)
+	    .height(300)
 	    .transitionDuration(1000)
 	    .dimension(auth_dim)
 	    .group(auth_grp)
@@ -391,10 +391,6 @@ function tableUpdate(type) {
             table.size(total);
         }
     }*/
-    table.size(7);
-	tableRepo.size(7);
-	tableOrg.size(7);
-	tableAuth.size(7);
 	var order = -1;
 	var order2 = -1;
 	tableRepo
