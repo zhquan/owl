@@ -4,11 +4,15 @@ var dc_commits = [];
 var dc_commits_month = [];
 var auth_names = {};
 var repo_names = {};
+var bots = {};
+var messages_text = {};
+var bot_dim;
 
 var getting_commits =  $.getJSON('json/scm-commits.json');
 var getting_orgs = $.getJSON('json/scm-orgs.json');
 var getting_auths = $.getJSON('json/scm-persons.json');
 var getting_repos = $.getJSON('json/scm-repos.json');
+var getting_messages = $.getJSON('json/scm-messages.json');
 
 var pieClickEvent = new Event('table');
 var timeRangeEvent = new Event('time');
@@ -22,6 +26,7 @@ function load_commits (commits, orgs, repos, auths) {
     });
     auths.values.forEach(function (value) {
         auth_names[value[3]] = value[1];
+        bots[value[1]] = value[2];
     });
     commits.values.forEach(function (value) {
 	    var record = {}
@@ -40,6 +45,7 @@ function load_commits (commits, orgs, repos, auths) {
             } else if (name == 'author') {
                 record[name] = value[index];
                 record.auth_name = auth_names[value[index]];
+                record.bot = bots[record.auth_name];
 	        } else if (name == 'tz') {
                 record[name] = value[index];
             } else {
@@ -50,142 +56,20 @@ function load_commits (commits, orgs, repos, auths) {
     });
 };
 
+function load_messages (messages) {
+    messages.values.forEach(function (value) {
+        messages_text[value[0]] = value[1];
+    });
+    dc_commits.forEach(function (d) {
+        d.message = messages_text[d.id];
+    });
+}
 
-function draw_charts () {
-    var ndx = crossfilter(dc_commits);
-    var all = ndx.groupAll();
-    var org_dim = ndx.dimension(function(d){
-        return d.org_name;
-    });
-    var org_grp = org_dim.group();
-    
-    var org_chart = dc.pieChart('#compPieChart');
-    org_chart.width(450)
-	    .height(300)
-	    .transitionDuration(1000)
-	    .dimension(org_dim)
-	    .group(org_grp)
-	    .cx(225)
-	    .cap(10)
-        .ordering(function (d) { return -d.value; });
-
-    org_chart.on('renderlet', function(chart) {
-	  chart.selectAll('.pie-slice').on("click", function(d) {
-    	document.dispatchEvent(pieClickEvent);
-	  });
-	});
-    var repo_dim = ndx.dimension(function(d){
-        return d.repo_name;
-    });
-    var repo_grp = repo_dim.group();
-    
-    var repo_chart = dc.pieChart('#repoPieChart');
-    repo_chart
-        .width(450)
-	    .height(300)
-	    .transitionDuration(1000)
-	    .dimension(repo_dim)
-	    .group(repo_grp)
-	    .cx(225)
-	    .cap(10)
-        .ordering(function (d) { return -d.value; });
-
-    repo_chart.on('renderlet', function(chart) {
-	  chart.selectAll('.pie-slice').on("click", function(d) {
-    	document.dispatchEvent(pieClickEvent);
-	  });
-	});
-    var auth_dim = ndx.dimension(function(d){
-        return d.auth_name;
-    });
-    var auth_grp = auth_dim.group();
-    var auth_chart = dc.pieChart('#authPieChart');
-    auth_chart
-        .width(450)
-	    .height(300)
-	    .transitionDuration(1000)
-	    .dimension(auth_dim)
-	    .group(auth_grp)
-	    .cx(225)
-	    .cap(10)
-        .ordering(function (d) { return -d.value; });
-
-    auth_chart.on('renderlet', function(chart) {
-	  chart.selectAll('.pie-slice').on("click", function(d) {
-    	document.dispatchEvent(pieClickEvent);
-	  });
-	});
-
-    var months_dim = ndx.dimension(function(d){
-        return d.month;
-    });
-
-    var commmits_month = months_dim.group();
-    var date_min = months_dim.bottom(1)[0].month;
-    var date_max = months_dim.top(1)[0].month;
-    var commits_chart = dc.barChart('#commitsChart');
-    commits_chart
-    	.width(850)
-	    .height(300)
-	    .transitionDuration(1000)
-	    .margins({top: 30, right: 50, bottom: 25, left: 50})
-	    .dimension(months_dim)
-	    .group(commmits_month)
-	    .x(d3.time.scale().domain([date_min,date_max]))
-	    .xUnits(d3.time.months)
-	    .elasticY(true)
-	    .xAxisLabel("Year");
-
-    commits_chart.on("filtered", function(chart,filter) {
-		document.dispatchEvent(timeRangeEvent);
-    });
-
-    var hours_dim = ndx.dimension(function(d){
-        return d.hour;
-    });
-    var commits_hour = hours_dim.group();
-    var hour_min = 0;
-    var hour_max = 23;
-    var hours_chart = dc.barChart('#commitsHoursChart');
-    hours_chart
-    	.width(500)
-    	.height(150)
-    	.transitionDuration(1000)
-    	.margins({top: 30, right: 50, bottom: 25, left: 50})
-    	.dimension(hours_dim)
-    	.group(commits_hour)
-    	.x(d3.scale.linear().domain([hour_min,hour_max]))
-	    .elasticY(true)
-//	.xUnits(dc.units.integers)
-	    .xAxisLabel("Hour");
-    //hours_chart.xAxis().tickValues([0, 5, 11, 17, 23]);
-    hours_chart.on("filtered", function(chart,filter) {
-		document.dispatchEvent(timeRangeEvent);
-    });
-    var tz_dim = ndx.dimension(function(d){
-        return d.tz;
-    });
-    var commits_tz = tz_dim.group();
-    var tz_min = -12;
-    var tz_max = 12;
-    var tz_chart = dc.barChart('#commitsTZChart');
-    tz_chart
-    	.width(500)
-    	.height(150)
-    	.transitionDuration(1000)
-    	.margins({top: 30, right: 50, bottom: 25, left: 50})
-    	.dimension(tz_dim)
-    	.group(commits_tz)
-    	.x(d3.scale.linear().domain([tz_min,tz_max]))
-	    .elasticY(true)
-	    .xAxisLabel("Time Zone");
-    tz_chart.on("filtered", function(chart,filter) {
-		document.dispatchEvent(timeRangeEvent);
-    });
+function draw_messages_table (ndx) {
     var dateDim = ndx.dimension(function (d) {
         return d.date;
     });
-    table = dc.dataTable('#table');
+    table = dc.dataTable('#table', 'commitsTable');
     table
         .dimension(dateDim)
         .group(function (d) {return '';})
@@ -195,6 +79,12 @@ function draw_charts () {
 	            label: 'Date',
                 format: function(d){
                     return d.date; 
+                }
+            },
+            {
+                label: 'Message',
+                format: function(d) {
+                    return d.message;
                 }
             },
             {
@@ -231,6 +121,143 @@ function draw_charts () {
         table.selectAll('.dc-table-group').classed('info', true);
     });
 
+    dc.renderAll('commitsTable');
+}
+
+function draw_charts () {
+    var ndx = crossfilter(dc_commits);
+    var all = ndx.groupAll();
+
+    bot_dim = ndx.dimension(function(d){
+        return d.bot;
+    });
+    var org_dim = ndx.dimension(function(d){
+        return d.org_name;
+    });
+    var org_grp = org_dim.group();
+    
+    var org_chart = dc.pieChart('#compPieChart', 'other');
+    org_chart.width(450)
+	    .height(300)
+	    .transitionDuration(1000)
+	    .dimension(org_dim)
+	    .group(org_grp)
+	    .cx(225)
+	    .cap(10)
+        .ordering(function (d) { return -d.value; });
+
+    org_chart.on('renderlet', function(chart) {
+	  chart.selectAll('.pie-slice').on("click", function(d) {
+    	document.dispatchEvent(pieClickEvent);
+	  });
+	});
+    var repo_dim = ndx.dimension(function(d){
+        return d.repo_name;
+    });
+    var repo_grp = repo_dim.group();
+    
+    var repo_chart = dc.pieChart('#repoPieChart', 'other');
+    repo_chart
+        .width(450)
+	    .height(300)
+	    .transitionDuration(1000)
+	    .dimension(repo_dim)
+	    .group(repo_grp)
+	    .cx(225)
+	    .cap(10)
+        .ordering(function (d) { return -d.value; });
+
+    repo_chart.on('renderlet', function(chart) {
+	  chart.selectAll('.pie-slice').on("click", function(d) {
+    	document.dispatchEvent(pieClickEvent);
+	  });
+	});
+    var auth_dim = ndx.dimension(function(d){
+        return d.auth_name;
+    });
+    var auth_grp = auth_dim.group();
+    var auth_chart = dc.pieChart('#authPieChart', 'other');
+    auth_chart
+        .width(450)
+	    .height(300)
+	    .transitionDuration(1000)
+	    .dimension(auth_dim)
+	    .group(auth_grp)
+	    .cx(225)
+	    .cap(10)
+        .ordering(function (d) { return -d.value; });
+
+    auth_chart.on('renderlet', function(chart) {
+	  chart.selectAll('.pie-slice').on("click", function(d) {
+    	document.dispatchEvent(pieClickEvent);
+	  });
+	});
+
+    var months_dim = ndx.dimension(function(d){
+        return d.month;
+    });
+
+    var commmits_month = months_dim.group();
+    var date_min = months_dim.bottom(1)[0].month;
+    var date_max = months_dim.top(1)[0].month;
+    var commits_chart = dc.barChart('#commitsChart', 'other');
+    commits_chart
+    	.width(1100)
+	    .height(300)
+	    .transitionDuration(1000)
+	    .margins({top: 10, right: 50, bottom: 25, left: 50})
+	    .dimension(months_dim)
+	    .group(commmits_month)
+	    .x(d3.time.scale().domain([date_min,date_max]))
+	    .xUnits(d3.time.months)
+	    .elasticY(true)
+	    .xAxisLabel("Year");
+
+    commits_chart.on("filtered", function(chart,filter) {
+		document.dispatchEvent(timeRangeEvent);
+    });
+
+    var hours_dim = ndx.dimension(function(d){
+        return d.hour;
+    });
+    var commits_hour = hours_dim.group();
+    var hour_min = 0;
+    var hour_max = 23;
+    var hours_chart = dc.barChart('#commitsHoursChart', 'other');
+    hours_chart
+    	.width(650)
+    	.height(150)
+    	.transitionDuration(1000)
+    	.margins({top: 10, right: 10, bottom: 25, left: 50})
+    	.dimension(hours_dim)
+    	.group(commits_hour)
+    	.x(d3.scale.linear().domain([hour_min,hour_max]))
+	    .elasticY(true)
+	    .xAxisLabel("Hour");
+    hours_chart.on("filtered", function(chart,filter) {
+		document.dispatchEvent(timeRangeEvent);
+    });
+    var tz_dim = ndx.dimension(function(d){
+        return d.tz;
+    });
+    var commits_tz = tz_dim.group();
+    var tz_min = -12;
+    var tz_max = 12;
+    var tz_chart = dc.barChart('#commitsTZChart', 'other');
+    tz_chart
+    	.width(650)
+    	.height(150)
+    	.transitionDuration(1000)
+    	.margins({top: 10, right: 10, bottom: 25, left: 50})
+    	.dimension(tz_dim)
+    	.group(commits_tz)
+    	.x(d3.scale.linear().domain([tz_min,tz_max]))
+	    .elasticY(true)
+	    .xAxisLabel("Time Zone");
+    tz_chart.on("filtered", function(chart,filter) {
+		document.dispatchEvent(timeRangeEvent);
+    });
+
     repo = [];
 	repoDim = ndx.dimension(function (d) {
 		if (repo.indexOf(d.repo_name) == -1) {
@@ -242,7 +269,7 @@ function draw_charts () {
 	repoGrp = repoDim.group();
     var order = -1;
     var order2 = -1;
-    tableRepo = dc.dataTable('#tableRepo');
+    tableRepo = dc.dataTable('#tableRepo', 'table');
     tableRepo
         .dimension(repoDim)
         .group(function (d) {return "";})
@@ -277,7 +304,7 @@ function draw_charts () {
 	    return org[i];
 	});
 	orgGrp = orgDim.group();
-    tableOrg = dc.dataTable('#tableOrg');
+    tableOrg = dc.dataTable('#tableOrg', 'table');
     var orderOrgKey = -1;
     var orderOrgVal = -1;
     tableOrg
@@ -314,7 +341,7 @@ function draw_charts () {
 	    return auth[i];
 	});
 	authGrp = authDim.group();
-    tableAuth = dc.dataTable('#tableAuth');
+    tableAuth = dc.dataTable('#tableAuth', 'table');
     var authOrderKey = -1;
 	var authOrderVal = -1;
 
@@ -343,7 +370,7 @@ function draw_charts () {
         table.selectAll('.dc-table-group').classed('info', true);
     });
 
-    dc.dataCount('.dc-data-count')
+    dc.dataCount('.dc-data-count', 'other')
         .dimension(ndx)
         .group(all)
         .html({
@@ -354,16 +381,22 @@ function draw_charts () {
         });
 
 
-    dc.renderAll();
+    dc.renderAll('other');
+    dc.renderAll('table');
+    return ndx;
 };
 
 document.addEventListener('table', function (e) {
 	tableUpdate('click');
-	dc.redrawAll();
+	dc.redrawAll('other');
+    dc.redrawAll('table');
+    dc.redrawAll('commitsTable')
 }, false);
 document.addEventListener('time', function (e) {
 	tableUpdate('time');
-	dc.redrawAll();
+	dc.redrawAll('other');
+    dc.redrawAll('table');
+    dc.redrawAll('commitsTable')
 }, false);
 function tableUpdate(type) {
 /*	if (type == 'reset'){
@@ -391,6 +424,11 @@ function tableUpdate(type) {
             table.size(total);
         }
     }*/
+    if (type == 'more') {
+        tableRepo.size(tableRepo.size()+4);
+		tableOrg.size(tableOrg.size()+4);
+		tableAuth.size(tableAuth.size()+4);
+    }
 	var order = -1;
 	var order2 = -1;
 	tableRepo
@@ -467,18 +505,48 @@ function tableUpdate(type) {
             }
         ]);
 }
+
+$('#commitsTableMore').on('click', function () {
+    table.size(table.size()+4);
+    dc.redrawAll('commitsTable');
+});
+$('tablesMore').on('click', function() {
+    tableUpdate('more');
+    dc.redrawAll('table');
+});
+$(".checkbox").change(function() {
+    if(this.checked) {
+        bot_dim.filterAll();
+    } else {
+        bot_dim.filter(0);
+    }
+    dc.redrawAll('commitsTable');
+    dc.redrawAll('other');
+    dc.redrawAll('table');
+    
+});
 function Reset(){
     $.when(
-        dc.filterAll()
+        dc.filterAll('other'),
+        dc.redrawAll('table'),
+        dc.filterAll('commitsTable')
     ).done(function(){
-        tableUpdate('reset')
-        dc.redrawAll();
+        document.getElementById("checkbox").checked = true;
+        tableUpdate('reset');
+        dc.redrawAll('commitsTable');
+        dc.redrawAll('other');
+        dc.redrawAll('table');
+        
     })
 }
 $(document).ready(function(){
     $.when(getting_commits, getting_orgs, getting_repos, getting_auths).done(function (commits, orgs, repos, auths) {
 	// Element 0 of the array contains the data
 	    load_commits(commits[0], orgs[0], repos[0], auths[0]);
-	    draw_charts();
+	    var ndx = draw_charts();
+        $.when(getting_messages).done(function (messages) {
+            load_messages(messages);
+            draw_messages_table(ndx);
+        });
     })
 });
