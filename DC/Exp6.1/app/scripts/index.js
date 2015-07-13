@@ -11,10 +11,14 @@ var org_chart;
 var repo_chart;
 var auth_chart;
 
-var repoFilters=[];
-var deveFilters=[];
-var compFilters=[];
-var projFilters=[];
+var repo_array = [];
+var auth_array = [];
+var org_array = [];
+
+var repoFilters = [];
+var deveFilters = [];
+var compFilters = [];
+var projFilters = [];
 var entriesdb=[];
 
 var getting_commits =  $.getJSON('json/scm-commits.json');
@@ -29,15 +33,18 @@ var timeRangeEvent = new Event('time');
 function load_commits (commits, orgs, repos, auths) {
     orgs.values.forEach(function (value) {
 	    org_names[value[0]] = value[1];
+        org_array.push(value[1]);
         entriesdb.push(value[1]);
     });
     repos.values.forEach(function (value) {
         repo_names[value[0]] = value[1];
+        repo_array.push(value[1]);
         entriesdb.push(value[1]);
     });
     auths.values.forEach(function (value) {
         auth_names[value[3]] = value[1];
         bots[value[1]] = value[2];
+        auth_array.push(value[1]);
         entriesdb.push(value[1]);
     });
     commits.values.forEach(function (value) {
@@ -276,7 +283,7 @@ function draw_charts () {
     auth_chart.on("filtered", function(chart,filter) {
         var i=0;
         if(filter==null){
-            repoFilters=[]
+            deveFilters=[]
         }else{
             $("#filterDeve").empty()
             if(filter.constructor==Array){
@@ -727,10 +734,6 @@ function readURL(){
     }
 }
 
- /****************Inputs****************/
-$(':input:not(textarea)').keypress(function(event) {
-    return event.keyCode != 13;
-});
 $("#searchForm").autocomplete({
     source: entriesdb,
     minLength: 0
@@ -740,18 +743,20 @@ $('#searchForm').keyup(function(e){
     if(e.keyCode == 13){
         var entrie = this.value;
         if(entrie != ""){
-            if(org_names.indexOf(entrie) != -1){
+            if(org_array.indexOf(entrie) != -1){
                 this.value = ""
                 org_chart.filter(entrie)
                 document.dispatchEvent(pieClickEvent);
-            }else if(auth_names.indexOf(entrie) != -1){
+            }else if(auth_array.indexOf(entrie) != -1){
                 this.value = ""
-                commitsNamePie.filter(entrie)
+                auth_chart.filter(entrie)
                 document.dispatchEvent(pieClickEvent);
-            }else if(repo_names.indexOf(entrie) != -1){
+            }else if(repo_array.indexOf(entrie) != -1){
                 this.value = ""
                 repo_chart.filter(entrie)
                 document.dispatchEvent(pieClickEvent);
+            }else{
+                alert('No exist. Try again')
             }
         }
     }
