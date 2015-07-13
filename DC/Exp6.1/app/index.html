@@ -1,202 +1,210 @@
 <!doctype html>
 <html lang="">
-<head>
-<meta charset="utf-8">
-<title>Bitergia Grimoire Visualization</title>
-<meta name="description" content="Project visualization using new VizGrimoire JS toolkit based on dc.js and crossfilter.js">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="shortcut icon" href="/favicon.ico">
-<link rel="apple-touch-icon" href="/apple-touch-icon.png">
-<!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-<!-- build:css(./) styles/vendor.css -->
-<!-- bower:css -->
-<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
-<link rel="stylesheet" href="bower_components/dcjs/dc.css" />
-<!-- endbower -->
-<!-- endbuild -->
-<!-- build:css(.tmp) styles/main.css -->
-<link rel="stylesheet" href="styles/main.css">
-<link rel="stylesheet" type="text/css" href="styles/jquery-ui.custom.min.css">
-<!-- endbuild -->
-</head>
-<body>
-<!--[if lt IE 10]>
-<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-<![endif]-->
-<!-- Section: navbar -->
-<nav class="navbar navbar-inverse navbar-fixed-top">
-<div class="container-fluid">
-<div class="row">
-<div class="col-xs-6">
-<div class="navbar-header">
-<a class="navbar-brand" href="#" style="color: #fff;">
-<strong>Bitergia Grimoire Visualization</strong>
-</a>
-</div>
-</div>
-<div class="col-xs-6 pull-right">
-<div class="navbar-text navbar-right">
-<span>Share: <button id="shareOnTW" class="btn btn-xs btn-primary"><i class="fa fa-twitter"></i> Twitter</button>
-<button id="shareUrl" class="btn btn-xs btn-success"><i class="fa fa-share"></i> Url</button><span>
-</div>
-</div>
-</div>
-</div>
-</nav>
-<!-- Section: main content -->
-<div class="container-fluid">
-<div class="row">
-<!-- filter -->
-<div class="col-md-1 col-md-push-11 hidden-xs hidden-sm">
-    <div class="affix affix-top" style="width: 130px;">
-        <h2>Searching &amp; filtering</h2>
-        <form class="form-inline">
-            <div class="form-group">
-                <label>Project:</label>
-                <select id="projectForm" class="form-control">
-                    <option>All</option>
-                    <option>Docker</option>
-                    <option>Kubernetes</option>
-                </select>
+    <head>
+        <meta charset="utf-8">
+        <title>Bitergia Grimoire Visualization</title>
+        <meta name="description" content="Project visualization using new VizGrimoire JS toolkit based on dc.js and crossfilter.js">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="shortcut icon" href="/favicon.ico">
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+        <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+        <!-- build:css(./) styles/vendor.css -->
+        <!-- bower:css -->
+        <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+        <link rel="stylesheet" href="bower_components/dcjs/dc.css" />
+        <!-- endbower -->
+        <!-- endbuild -->
+        <!-- build:css(.tmp) styles/main.css -->
+        <link rel="stylesheet" href="styles/main.css">
+        <link rel="stylesheet" type="text/css" href="styles/jquery-ui.custom.min.css">
+        <!-- endbuild -->
+    </head>
+
+    <body>
+        <!--[if lt IE 10]>
+        <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+        <!-- Section: navbar -->
+        <nav class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="navbar-header">
+                            <a class="navbar-brand" href="#" style="color: #fff;">
+                            <strong>Bitergia Grimoire Visualization</strong>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-6 pull-right">
+                        <div class="navbar-text navbar-right">
+                            <span>Share: <button id="shareOnTW" class="btn btn-xs btn-primary"><i class="fa fa-twitter"></i> Twitter</button>
+                            <button id="shareUrl" class="btn btn-xs btn-success"><i class="fa fa-share"></i> Url</button><span>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </form>
-        <div id="dc-nav" style="margin-top: 0px; float:none;" class="text-center dc-data-count"></div>
-        <hr>
-        <form class="form-inline">
-            <div class="form-group">
-                <label for="serchForm">Search</label>
-                <input type="text" class="form-control" id="searchForm" placeholder="contributor, organization, repository name" style="width: 120px;">
+        </nav>
+
+        <!-- Section: main content -->
+        <div class="container-fluid">
+            <div class="row">
+            <!-- filter -->
+                <div class="col-md-1 col-md-push-11 hidden-xs hidden-sm">
+                    <div class="affix affix-top" style="width: 130px;">
+                        <h2>Searching &amp; filtering</h2>
+                        <form class="form-inline">
+                            <div class="form-group">
+                                <label>Project:</label>
+                                <select id="projectForm" class="form-control">
+                                    <option>All</option>
+                                    <option>Docker</option>
+                                    <option>Kubernetes</option>
+                                </select>
+                            </div>
+                        </form>
+                        <div id="dc-nav" style="margin-top: 0px; float:none;" class="text-center dc-data-count"></div>
+                        <hr>
+                        <form class="form-inline">
+                            <div class="form-group">
+                                <label for="serchForm">Search</label>
+                                <input type="text" class="form-control" id="searchForm" placeholder="contributor, organization, repository name" style="width: 120px;">
+                            </div>
+                        </form>
+                        <hr>
+                        <h3>Filters applied</h3>
+                        <p><span>Contributors:</span></p>
+                        <span id="filterDeve"></span>
+                        <hr>
+                        <p><span>Organizations:</span></p>
+                        <span id="filterComp"></span>
+                        <hr>
+                        <p><span>Repositories:</span></p>
+                        <span id="filterRepo"></span>
+                        <hr>
+                        <form class="form-inline" id="botCheckBox">
+                            <div class="form-group">
+                                <input id="checkbox" class="checkbox" type="checkbox" name="bot" value="bot" checked="true">Bot
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <!-- content -->
+                <div class="col-md-11 col-md-pull-1 col-sm-12" style="border-right: thin solid #333;">
+                    <div class="row hidden-md hidden-lg">
+                        <div class="col-sm-12 text-right">
+                            <p><a href="#" type="button" class="btn btn-sm btn-primary" onclick="Reset()">Reset filters</a></p>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-10">
+                            <h2>Activity</h2>
+                            <div id="commitsChart"></div>
+                            <div id="commitsHoursChart"></div>
+                            <div id="commitsTZChart"></div>
+                        </div>
+                        <div class="col-sm-2 text-right">
+                            <h2>Date range</h2>
+                            <p>
+                                <span id="filterFrom"> 2012-1-1 //</span><span id="filterTo"> 2015-12-31 </span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <h2>Repositories distribution</h2>
+                            <div id="repoPieChart" class="pieChart"></div>
+                        </div>
+                        <div class="col-sm-4">
+                            <h2>Organizations distribution</h2>
+                            <div id="compPieChart" class="pieChart"></div>
+                        </div>
+                        <div class="col-sm-4">
+                            <h2>Contributors distribution</h2>
+                            <div id="authPieChart" class="pieChart"></div>
+                        </div>
+                    </div>
+
+                    <div class="row text-right">
+                        <div class="col-md-12">
+                            <button class="btn btn-primary btn-xs" type="button" data-toggle="collapse" data-target="#tables"
+                            aria-expanded="true" aria-controls="">
+                                Toggle tables view
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="row collapse in" id="tables">
+                        <div class="col-md-4">
+                            <h2>Repositories list</h2>
+                            <table id="tableRepo" class="table table-hover dc-data-table"></table>
+                        </div>
+                        <div class="col-md-4">
+                            <h2>Organizations list</h2>
+                            <table id="tableOrg" class="table table-hover dc-data-table"></table>
+                        </div>
+                        <div class="col-md-4">
+                            <h2>Contributors list</h2>
+                            <table id="tableAuth" class="table table-hover dc-data-table"></table>
+                        </div>
+                        <div class="col-md-12 text-center">
+                            <button class="btn btn-warning btn-sm" id="tablesMore">See more</button>
+                        </div>
+                    </div>
+
+                    <div class="row pull-right">
+                        <button class="btn btn-primary btn-xs" type="button" data-toggle="collapse" data-target="#commitTable"
+                        aria-expanded="true" aria-controls="">
+                            Toggle commits table view
+                        </button>
+                    </div>
+
+                    <div class="row collapse in" id="commitTable">
+                        <div class="col-sm-12">
+                            <h2>Commits list</h2>
+                            <table id="table" class="table table-hover dc-data-table"></table>
+                        </div>
+                        <div class="col-sm-12 text-center">
+                            <button class="btn btn-warning btn-sm" id="commitsTableMore">See more</button>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </form>
+        </div>
+    <!-- footer --->
         <hr>
-        <h3>Filters applied</h3>
-        <p><span>Contributors:</span></p>
-        <span id="filterDeve"></span>
-        <hr>
-        <p><span>Organizations:</span></p>
-        <span id="filterComp"></span>
-        <hr>
-        <p><span>Repositories:</span></p>
-        <span id="filterRepo"></span>
-        <hr>
-        <form class="form-inline" id="botCheckBox">
-            <div class="form-group">
-                <input id="checkbox" class="checkbox" type="checkbox" name="bot" value="bot" checked="true">Bot
-            </div>
-        </form>
-    </div>
-    
-</div>
-<!-- content -->
-<div class="col-md-11 col-md-pull-1 col-sm-12" style="border-right: thin solid #333;">
-<div class="row hidden-md hidden-lg">
-<div class="col-sm-12 text-right">
-<p><a href="#" type="button" class="btn btn-sm btn-primary" onclick="Reset()">Reset filters</a></p>
-</div>
-</div>
-<div class="row">
-<div class="col-sm-10">
-<h2>Activity</h2>
-<div id="commitsChart"></div>
-<div id="commitsHoursChart"></div>
-<div id="commitsTZChart"></div>
-</div>
-<div class="col-sm-2 text-right">
-<h2>Date range</h2>
-<p>
-<span id="filterFrom"> 2012-1-1 //</span><span id="filterTo"> 2015-12-31 </span>
-</p>
-</div>
-</div>
-<div class="row">
-<div class="col-sm-4">
-<h2>Repositories distribution</h2>
-<div id="repoPieChart" class="pieChart"></div>
-</div>
-<div class="col-sm-4">
-<h2>Organizations distribution</h2>
-<div id="compPieChart" class="pieChart"></div>
-</div>
-<div class="col-sm-4">
-<h2>Contributors distribution</h2>
-<div id="authPieChart" class="pieChart"></div>
-</div>
-</div>
-<div class="row text-right">
-<div class="col-md-12">
-<button class="btn btn-primary btn-xs" type="button" data-toggle="collapse" data-target="#tables"
-aria-expanded="true" aria-controls="">
-Toggle tables view
-</button>
-</div>
-</div>
-<div class="row collapse in" id="tables">
-<div class="col-md-4">
-<h2>Repositories list</h2>
-<table id="tableRepo" class="table table-hover dc-data-table"></table>
-</div>
-<div class="col-md-4">
-<h2>Organizations list</h2>
-<table id="tableOrg" class="table table-hover dc-data-table"></table>
-</div>
-<div class="col-md-4">
-<h2>Contributors list</h2>
-<table id="tableAuth" class="table table-hover dc-data-table"></table>
-</div>
-<div class="col-md-12 text-center">
-<button class="btn btn-warning btn-sm" id="tablesMore">See more</button>
-</div>
-</div>
-<div class="row pull-right">
-<button class="btn btn-primary btn-xs" type="button" data-toggle="collapse" data-target="#commitTable"
-aria-expanded="true" aria-controls="">
-Toggle commits table view
-</button>
-</div>
-<div class="row collapse in" id="commitTable">
-<div class="col-sm-12">
-<h2>Commits list</h2>
-<table id="table" class="table table-hover dc-data-table"></table>
-</div>
-<div class="col-sm-12 text-center">
-<button class="btn btn-warning btn-sm" id="commitsTableMore">See more</button>
-</div>
-</div>
-</div>
-</div>
-</div>
-<!-- footer --->
-<hr>
-<div class="container">
-<footer>
-<p>&copy; Powered by <a href="http://bitergia.com"><img src="images/bitergia.png" alt="Bitergia" height="18"></a> 2014</p>
-</footer>
-</div>
-<!-- build:js(./) scripts/vendor.js -->
-<!-- bower:js -->
-<script src="bower_components/jquery/dist/jquery.js"></script>
-<script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
-<script src="bower_components/d3/d3.js"></script>
-<script src="bower_components/crossfilter/crossfilter.js"></script>
-<script src="bower_components/dcjs/dc.js"></script>
-<!-- endbower -->
-<!-- endbuild -->
-<!-- build:js scripts/main.js -->
-<script type="text/javascript" src="scripts/colorbrewer.js"></script>
-<script type="text/javascript" src="scripts/jquery-ui.min.js"></script>
-<script type="text/javascript" src="scripts/index.js"></script>
-<script type="text/javascript" src="scripts/PiesCharts.js"></script>
-<script type="text/javascript" src="scripts/TablesCharts.js"></script>
-<script type="text/javascript" src="scripts/TimeCharts.js"></script>
-<!-- endbuild -->
-<!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
-<script>
-(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
-function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
-e=o.createElement(i);r=o.getElementsByTagName(i)[0];
-e.src='https://www.google-analytics.com/analytics.js';
-r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
-ga('create','UA-XXXXX-X');ga('send','pageview');
-</script>
-</body>
+        <div class="container">
+            <footer>
+                <p>&copy; Powered by <a href="http://bitergia.com"><img src="images/bitergia.png" alt="Bitergia" height="18"></a> 2014</p>
+            </footer>
+        </div>
+        <!-- build:js(./) scripts/vendor.js -->
+        <!-- bower:js -->
+        <script src="bower_components/jquery/dist/jquery.js"></script>
+        <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+        <script src="bower_components/d3/d3.js"></script>
+        <script src="bower_components/crossfilter/crossfilter.js"></script>
+        <script src="bower_components/dcjs/dc.js"></script>
+        <!-- endbower -->
+        <!-- endbuild -->
+        <!-- build:js scripts/main.js -->
+        <script type="text/javascript" src="scripts/colorbrewer.js"></script>
+        <script type="text/javascript" src="scripts/jquery-ui.min.js"></script>
+        <script type="text/javascript" src="scripts/index.js"></script>
+        <script type="text/javascript" src="scripts/PiesCharts.js"></script>
+        <script type="text/javascript" src="scripts/TablesCharts.js"></script>
+        <script type="text/javascript" src="scripts/TimeCharts.js"></script>
+        <!-- endbuild -->
+        <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+        <script>
+            (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
+            function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
+            e=o.createElement(i);r=o.getElementsByTagName(i)[0];
+            e.src='https://www.google-analytics.com/analytics.js';
+            r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
+            ga('create','UA-XXXXX-X');ga('send','pageview');
+        </script>
+    </body>
 </html>

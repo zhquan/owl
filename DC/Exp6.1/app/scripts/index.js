@@ -1,4 +1,3 @@
-
 var org_names = {};
 var dc_commits = [];
 var dc_commits_month = [];
@@ -7,6 +6,16 @@ var repo_names = {};
 var bots = {};
 var messages_text = {};
 var bot_dim;
+
+var org_chart;
+var repo_chart;
+var auth_chart;
+
+var repoFilters=[];
+var deveFilters=[];
+var compFilters=[];
+var projFilters=[];
+var entriesdb=[];
 
 var getting_commits =  $.getJSON('json/scm-commits.json');
 var getting_orgs = $.getJSON('json/scm-orgs.json');
@@ -20,13 +29,16 @@ var timeRangeEvent = new Event('time');
 function load_commits (commits, orgs, repos, auths) {
     orgs.values.forEach(function (value) {
 	    org_names[value[0]] = value[1];
+        entriesdb.push(value[1]);
     });
     repos.values.forEach(function (value) {
         repo_names[value[0]] = value[1];
+        entriesdb.push(value[1]);
     });
     auths.values.forEach(function (value) {
         auth_names[value[3]] = value[1];
         bots[value[1]] = value[2];
+        entriesdb.push(value[1]);
     });
     commits.values.forEach(function (value) {
 	    var record = {}
@@ -136,7 +148,7 @@ function draw_charts () {
     });
     var org_grp = org_dim.group();
     
-    var org_chart = dc.pieChart('#compPieChart', 'other');
+    org_chart = dc.pieChart('#compPieChart', 'other');
     org_chart.width(450)
 	    .height(300)
 	    .transitionDuration(1000)
@@ -151,12 +163,46 @@ function draw_charts () {
     	document.dispatchEvent(pieClickEvent);
 	  });
 	});
+
+    org_chart.on("filtered", function(chart,filter) {
+        var i=0;
+        if(filter==null){
+            compFilters=[]
+        }else{
+            $("#filterComp").empty()
+            if(filter.constructor==Array){
+                if(compFilters.indexOf("Others ("+filter[0].length+")")==-1){
+                    compFilters.push("Others ("+filter[0].length+")")
+                }else{
+                    compFilters.splice(compFilters.indexOf("Others ("+filter[0].length+")"),1)
+                }
+            }else{
+                if(filter!="Others"){
+                    if(compFilters.indexOf(filter)==-1){
+                        compFilters.push(filter)
+                    }else{
+                        compFilters.splice(compFilters.indexOf(filter),1)
+                    }
+                }
+            }
+            for(x=0;x<=5;x++){
+                if(compFilters[x]!=undefined){
+                    $("#filterComp").append('<span class="label label-default" id="filter-'+compFilters[x].replaceAll(" ","0").replaceAll(".","0").replaceAll(",","0").replaceAll("(","0").replaceAll(")","0").replaceAll("?","0").replaceAll("'","0").replaceAll("@","0")+'"> '+compFilters[x]+' </span>')
+                }
+            }
+            if(compFilters.length>5){
+                $("#filterComp").append('<span class="label label-default" id="filter-y"> '+(compFilters.length-5)+' More </span>')
+            }
+        }
+        window.history.replaceState("object or string", "Title", writeURL());
+    });
+
     var repo_dim = ndx.dimension(function(d){
         return d.repo_name;
     });
     var repo_grp = repo_dim.group();
     
-    var repo_chart = dc.pieChart('#repoPieChart', 'other');
+    repo_chart = dc.pieChart('#repoPieChart', 'other');
     repo_chart
         .width(450)
 	    .height(300)
@@ -172,11 +218,45 @@ function draw_charts () {
     	document.dispatchEvent(pieClickEvent);
 	  });
 	});
+
+    repo_chart.on("filtered", function(chart,filter) {
+        var i=0;
+        if(filter==null){
+            repoFilters=[]
+        }else{
+            $("#filterRepo").empty()
+            if(filter.constructor==Array){
+                if(repoFilters.indexOf("Others ("+filter[0].length+")")==-1){
+                    repoFilters.push("Others ("+filter[0].length+")")
+                }else{
+                    repoFilters.splice(repoFilters.indexOf("Others ("+filter[0].length+")"),1)
+                }
+            }else{
+                if(filter!="Others"){
+                    if(repoFilters.indexOf(filter)==-1){
+                        repoFilters.push(filter)
+                    }else{
+                        repoFilters.splice(repoFilters.indexOf(filter),1)
+                    }
+                }
+            }
+            for(x=0;x<=5;x++){
+                if(repoFilters[x]!=undefined){
+                    $("#filterRepo").append('<span class="label label-default" id="filter-'+repoFilters[x].replaceAll(" ","0").replaceAll(".","0").replaceAll(",","0").replaceAll("(","0").replaceAll(")","0").replaceAll("?","0").replaceAll("'","0").replaceAll("@","0")+'"> '+repoFilters[x]+' </span>')
+                }
+            }
+            if(repoFilters.length>5){
+                $("#filterRepo").append('<span class="label label-default" id="filter-y"> '+(repoFilters.length-5)+' More </span>')
+            }
+        }
+        window.history.replaceState("object or string", "Title", writeURL());
+    });
+
     var auth_dim = ndx.dimension(function(d){
         return d.auth_name;
     });
     var auth_grp = auth_dim.group();
-    var auth_chart = dc.pieChart('#authPieChart', 'other');
+    auth_chart = dc.pieChart('#authPieChart', 'other');
     auth_chart
         .width(450)
 	    .height(300)
@@ -193,6 +273,38 @@ function draw_charts () {
 	  });
 	});
 
+    auth_chart.on("filtered", function(chart,filter) {
+        var i=0;
+        if(filter==null){
+            repoFilters=[]
+        }else{
+            $("#filterDeve").empty()
+            if(filter.constructor==Array){
+                if(deveFilters.indexOf("Others ("+filter[0].length+")")==-1){
+                    deveFilters.push("Others ("+filter[0].length+")")
+                }else{
+                    deveFilters.splice(deveFilters.indexOf("Others ("+filter[0].length+")"),1)
+                }
+            }else{
+                if(filter!="Others"){
+                    if(deveFilters.indexOf(filter)==-1){
+                        deveFilters.push(filter)
+                    }else{
+                        deveFilters.splice(deveFilters.indexOf(filter),1)
+                    }
+                }
+            }
+            for(x=0;x<=5;x++){
+                if(deveFilters[x]!=undefined){
+                    $("#filterDeve").append('<span class="label label-default" id="filter-'+deveFilters[x].replaceAll(" ","0").replaceAll(".","0").replaceAll(",","0").replaceAll("(","0").replaceAll(")","0").replaceAll("?","0").replaceAll("'","0").replaceAll("@","0")+'"> '+deveFilters[x]+' </span>')
+                }
+            }
+            if(deveFilters.length>5){
+                $("#filterDeve").append('<span class="label label-default" id="filter-y"> '+(deveFilters.length-5)+' More </span>')
+            }
+        }
+        window.history.replaceState("object or string", "Title", writeURL());
+    });
     var months_dim = ndx.dimension(function(d){
         return d.month;
     });
@@ -375,9 +487,9 @@ function draw_charts () {
         .group(all)
         .html({
             some:'<strong>%filter-count</strong> commits out of <strong>%total-count</strong>'+
-            ' <button type="button" class="btn btn-primary btn-sm" onclick="Reset()">Reset all filters</button>',
+            ' <button type="button" class="btn btn-primary btn-sm" onclick="reset()">Reset all filters</button>',
             all:'<strong>%filter-count</strong> commits out of <strong>%total-count</strong>'+
-            ' <button type="button" class="btn btn-primary btn-sm" onclick="Reset()">Reset all filters</button>'
+            ' <button type="button" class="btn btn-primary btn-sm" onclick="reset()">Reset all filters</button>'
         });
 
 
@@ -510,7 +622,7 @@ $('#commitsTableMore').on('click', function () {
     table.size(table.size()+4);
     dc.redrawAll('commitsTable');
 });
-$('tablesMore').on('click', function() {
+$('#tablesMore').on('click', function() {
     tableUpdate('more');
     dc.redrawAll('table');
 });
@@ -523,10 +635,147 @@ $(".checkbox").change(function() {
     dc.redrawAll('commitsTable');
     dc.redrawAll('other');
     dc.redrawAll('table');
-    
 });
-function Reset(){
+
+String.prototype.replaceAll = function(str1, str2, ignore){
+    return this.replace(new RegExp(str1.replace(/([\/\,\!\\\^\$\{\}\[\]\(\)\.\*\+\?\|\<\>\-\&])/g,"\\$&"),(ignore?"gi":"g")),(typeof(str2)=="string")?str2.replace(/\$/g,"$$$$"):str2);
+}
+/**************** Generate URL by filters *****************/
+function writeURL(){
+    var repoStrUrl='repo='
+    repoFilters.forEach(function(element){
+        if(repoFilters.indexOf(element)==repoFilters.length-1){
+            repoStrUrl+=element
+        }else{
+            repoStrUrl+=element+'+'
+        }
+    })
+    var compStrUrl='comp='
+    compFilters.forEach(function(element){
+        if(compFilters.indexOf(element)==compFilters.length-1){
+            compStrUrl+=element
+        }else{
+            compStrUrl+=element+'+'
+        }
+    })
+    var deveStrUrl='deve='
+    deveFilters.forEach(function(element){
+        if(deveFilters.indexOf(element)==deveFilters.length-1){
+            deveStrUrl+=element
+        }else{
+            deveStrUrl+=element+'+'
+        }
+    })
+    var projStrUrl='proj='
+/*    projFilters.forEach(function(element){
+        if(projFilters.indexOf(element)==projFilters.length-1){
+            projStrUrl+=element
+        }else{
+            projStrUrl+=element+'+'
+        }
+    })*/
+    return '?'+projStrUrl+'&'+repoStrUrl+'&'+deveStrUrl+'&'+compStrUrl
+}
+/********************** Read generated URL ****************************/
+function readURL(){
+    var arrayStrURL=document.URL.split("?")
+    if(arrayStrURL.length != 1){
+        var reset=false;
+        var repoStrUrl=arrayStrURL[1].split("repo=")[1].split("&")[0].split("+")
+        var compStrUrl=arrayStrURL[1].split("comp=")[1].split("&")[0].split("+")
+        var deveStrUrl=arrayStrURL[1].split("deve=")[1].split("&")[0].split("+")
+    //    var projStrUrl=arrayStrURL[1].split("proj=")[1].split("&")[0].split("+")
+        if(repoStrUrl[0]!=""){
+            repoStrUrl.forEach(function(element){
+                if(element.split("Others%20").length==2){
+                    reset=true;
+                }else{
+                    repo_chart.filter(unescape(element))
+                }
+            })
+        }
+        if(compStrUrl[0]!=""){
+            compStrUrl.forEach(function(element){
+                if(element.split("Others%20").length==2){
+                    reset=true;
+                }else{
+                    org_chart.filter(unescape(element))
+                }   
+            })
+        }
+        if(deveStrUrl[0]!=""){
+            deveStrUrl.forEach(function(element){
+                if(element.split("Others%20").length==2){
+                    reset=true;
+                }else{
+                    auth_chart.filter(unescape(element))
+                }
+            })
+        }
+    /*    if(projStrUrl[0]!=""){
+            dimProj.filter(unescape(projStrUrl[0]))
+            $("#projectForm").val(unescape(projStrUrl[0]))
+        }*/
+        tableUpdate();
+        if(reset){
+            alert("We are sorry. The filter Others does not work now. We are working to solve it.");
+            reset();
+        }
+        dc.redrawAll('commitsTable');
+        dc.redrawAll('other');
+        dc.redrawAll('table');
+    }
+}
+
+ /****************Inputs****************/
+$(':input:not(textarea)').keypress(function(event) {
+    return event.keyCode != 13;
+});
+$("#searchForm").autocomplete({
+    source: entriesdb,
+    minLength: 0
+}).on('focus', function() { $(this).keydown(); });
+
+$('#searchForm').keyup(function(e){
+    if(e.keyCode == 13){
+        var entrie = this.value;
+        if(entrie != ""){
+            if(org_names.indexOf(entrie) != -1){
+                this.value = ""
+                org_chart.filter(entrie)
+                document.dispatchEvent(pieClickEvent);
+            }else if(auth_names.indexOf(entrie) != -1){
+                this.value = ""
+                commitsNamePie.filter(entrie)
+                document.dispatchEvent(pieClickEvent);
+            }else if(repo_names.indexOf(entrie) != -1){
+                this.value = ""
+                repo_chart.filter(entrie)
+                document.dispatchEvent(pieClickEvent);
+            }
+        }
+    }
+});
+
+/*$("#projectForm").change(function(e){
+    if($(this).val() == "All"){
+        dimProj.filterAll()
+        projFilters = []
+    }else{
+        dimProj.filter($(this).val())
+        projFilters[0] = ($(this).val())
+    }
+    dc.redrawAll('time');
+    dc.redrawAll('other');
+    tableUpdate('click');
+    dc.redrawAll('tables');
+    dc.redrawAll('commitsTable');
+    window.history.replaceState("object or string", "Title", writeURL());
+});
+*/
+function reset(){
     $.when(
+        bot_dim.filterAll(),
         dc.filterAll('other'),
         dc.redrawAll('table'),
         dc.filterAll('commitsTable')
@@ -536,8 +785,10 @@ function Reset(){
         dc.redrawAll('commitsTable');
         dc.redrawAll('other');
         dc.redrawAll('table');
-        
-    })
+        $("#filterComp").empty()
+        $("#filterDeve").empty()
+        $("#filterRepo").empty()
+    });
 }
 $(document).ready(function(){
     $.when(getting_commits, getting_orgs, getting_repos, getting_auths).done(function (commits, orgs, repos, auths) {
@@ -547,6 +798,10 @@ $(document).ready(function(){
         $.when(getting_messages).done(function (messages) {
             load_messages(messages);
             draw_messages_table(ndx);
+        });
+        readURL();
+        $(':input:not(textarea)').keypress(function(event) {
+            return event.keyCode != 13;
         });
     })
 });
