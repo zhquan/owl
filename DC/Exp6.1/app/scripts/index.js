@@ -412,6 +412,10 @@ function draw_charts () {
 
     tableRepo.on('renderlet', function(table) {
         table.selectAll('.dc-table-group').classed('info', true);
+        table.selectAll(".dc-table-column._0").on("click", function(d){
+            repo_chart.filter($(this).html())
+            document.dispatchEvent(pieClickEvent);
+        });
     });
 
     org = [];
@@ -449,6 +453,10 @@ function draw_charts () {
         
     tableOrg.on('renderlet', function(table) {
         table.selectAll('.dc-table-group').classed('info', true);
+        table.selectAll(".dc-table-column._0").on("click", function(d){
+            org_chart.filter($(this).html())
+            document.dispatchEvent(pieClickEvent);
+        });
     });
 
     auth = [];
@@ -487,6 +495,10 @@ function draw_charts () {
         
     tableAuth.on('renderlet', function(table) {
         table.selectAll('.dc-table-group').classed('info', true);
+        table.selectAll(".dc-table-column._0").on("click", function(d){
+            auth_chart.filter($(this).html())
+            document.dispatchEvent(pieClickEvent);
+        });
     });
 
     dc.dataCount('.dc-data-count', 'other')
