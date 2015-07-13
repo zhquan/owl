@@ -29,6 +29,7 @@ companiesLook["array"]=[]
 var repos=[]
 var users=[]
 var proj=[]
+var entriesdb=[];
 
 var repoFilters=[]
 var deveFilters=[]
@@ -59,6 +60,7 @@ $(document).ready(function(){
             scmCompany = d;
             d.values.forEach(function(element){
                 companiesLook["array"].push(element[1])
+		entriesdb.push(element[1])
                 companiesLook[element[0]]=element[1]
             })
         }),
@@ -67,17 +69,26 @@ $(document).ready(function(){
             scmRepo = d;
             d.values.forEach(function(element){
                 repos.push(element[1])
+		entriesdb.push(element[1])
             })
         }),
 
         $.getJSON('../json/scm-commits-distinct.json', function (d) {
-            scmCommit = d;
+            scmCommit = d
+	    d.values.forEach(function(element){
+
+		if(users.indexOf(element[3])==-1){
+			users.push(element[3])
+			entriesdb.push(element[3])
+	    	}
+	    })
         }),
 
         $.getJSON('../json/scm-projects.json', function (d) {
             scmProj = d;
             Object.keys(d).forEach(function(element){
                 proj.push(element)
+		entriesdb.push(element)
             })
         })
 
@@ -174,76 +185,33 @@ $(document).ready(function(){
             return event.keyCode != 13;
         });
 
-        $("#companiesInput").autocomplete({
-            source:companiesLook["array"],
+	$("#searchForm").autocomplete({
+            source:entriesdb,
             minLength:0
         }).on('focus', function() { $(this).keydown(); });
 
-        $("#developersInput").autocomplete({
-            source:users,
-            minLength:0
-        }).on('focus', function() { $(this).keydown(); });
-
-        $("#reposInput").autocomplete({
-            source:repos,
-            minLength:0
-        }).on('focus', function() { $(this).keydown(); });
-
-        $("#projInput").autocomplete({
-            source:proj,
-            minLength:0
-        }).on('focus', function() { $(this).keydown(); });
-
-        $('#companiesInput').keyup(function(e){
-            if(e.keyCode == 13)
-            {
-                var company=this.value;
-                if(company!=""){
-                    this.value=""
-                    compPie.filter(company)
-                    document.dispatchEvent(pieClickEvent);
-                }
-            }
-
-        });
-        $('#developersInput').keyup(function(e){
-            if(e.keyCode == 13)
-            {
-                var deve=this.value;
-                if(deve!=""){
-                    this.value=""
-                    commitsNamePie.filter(deve)
-                    document.dispatchEvent(pieClickEvent);
+        $('#searchForm').keyup(function(e){
+            if(e.keyCode == 13){
+                var entrie=this.value;
+                if(entrie!=""){
+		    if(companiesLook["array"].indexOf(entrie)!=-1){
+			this.value=""
+                   	compPie.filter(entrie)
+                    	document.dispatchEvent(pieClickEvent);
+		    }else if(users.indexOf(entrie)!=-1){
+			this.value=""
+                    	commitsNamePie.filter(entrie)
+                    	document.dispatchEvent(pieClickEvent);
+		    }else if(repos.indexOf(entrie)!=-1){
+			this.value=""
+                  	 repoPie.filter(entrie)
+                   	 document.dispatchEvent(pieClickEvent);
+		    }
                 }
             }
 
         });
 
-        $('#reposInput').keyup(function(e){
-            if(e.keyCode == 13)
-            {
-                var repo=this.value;
-                if(repo!=""){
-                    this.value=""
-                    repoPie.filter(repo)
-                    document.dispatchEvent(pieClickEvent);
-                }
-            }
-
-        });
-
-        $('#projInput').keyup(function(e){
-            if(e.keyCode == 13)
-            {
-                var proj=this.value;
-                if(proj!=""){
-                    this.value=""
-                    projPie.filter(proj)
-                    document.dispatchEvent(pieClickEvent);
-                }
-            }
-
-        });
 
 	$("#projectForm").change(function(e){
 
@@ -443,7 +411,7 @@ function tableUpdate(type) {
 		tableOrg.size(sizeTableInit);
 		tableAuth.size(sizeTableInit);
 	} else if ((type == 'click') || (type == 'time')) {
-        var number = $('.dc-data-count.dc-chart').html().split('<strong>')[1].split('</strong>')[0];
+        var number = $('.text-center.dc-data-count.dc-chart').html().split('</')[0].split('>')[1];
 		var total = parseInt(number);
 		if (number.split(',')[1] != undefined){
 			total = parseInt(number.split(',')[0]+number.split(',')[1]);
@@ -463,13 +431,13 @@ function tableUpdate(type) {
             var sizeRepo = tableRepo.size();
             var sizeOrg = tableOrg.size();
             var sizeAuth = tableAuth.size();
-            if ((sizeRepo => total) && (total < 7)) {
+            if ((sizeRepo >= total) && (total < 7)) {
                 tableRepo.size(total);
             }
-            if ((sizeOrg => total) && (total < 7)) {
+            if ((sizeOrg >= total) && (total < 7)) {
                 tableOrg.size(total);
             }
-            if ((sizeAuth => total) && (total < 7)) {
+            if ((sizeAuth >= total) && (total < 7)) {
                 tableAuth.size(total);
                 table.size(total);
             }
@@ -551,8 +519,7 @@ function tableUpdate(type) {
                     }
                 }
             ]);
-//        dc.redrawAll('tables');
-//        dc.redrawAll('commitsTable');
+
     }
 }
 /************** Reset **************/
@@ -613,12 +580,15 @@ function writeURL(){
     })
 
     return '?'+projStrUrl+'&'+repoStrUrl+'&'+deveStrUrl+'&'+compStrUrl
+
+   
 }
 
 /********************** Read generated URL ****************************/
 function readURL(){
     var arrayStrURL=document.URL.split("?")
     if(arrayStrURL.length!=1){
+	var reset=false;
         var repoStrUrl=arrayStrURL[1].split("repo=")[1].split("&")[0].split("+")
         var compStrUrl=arrayStrURL[1].split("comp=")[1].split("&")[0].split("+")
         var deveStrUrl=arrayStrURL[1].split("deve=")[1].split("&")[0].split("+")
@@ -626,19 +596,34 @@ function readURL(){
 
         if(repoStrUrl[0]!=""){
             repoStrUrl.forEach(function(element){
-              repoPie.filter(unescape(element))
+		if(element.split("Others%20").length==2){
+
+			reset=true;
+	      	}else{
+              		repoPie.filter(unescape(element))	
+		}
             })
         }
 
         if(compStrUrl[0]!=""){
             compStrUrl.forEach(function(element){
-              compPie.filter(unescape(element))
+	      if(element.split("Others%20").length==2){
+
+		reset=true;
+	      }else{
+		compPie.filter(unescape(element))
+	      }
             })
         }
 
         if(deveStrUrl[0]!=""){
             deveStrUrl.forEach(function(element){
-                commitsNamePie.filter(unescape(element))
+		if(element.split("Others%20").length==2){
+			
+			reset=true;
+	      	}else{
+                	commitsNamePie.filter(unescape(element))
+		}
             })
         }
 
@@ -648,5 +633,10 @@ function readURL(){
 
         }
         document.dispatchEvent(pieClickEvent);
+
+	if(reset){
+		alert("We are sorry. The filter Others does not work now. We are working to solve it.")
+		Reset()
+	}
     }
 }
