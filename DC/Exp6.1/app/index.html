@@ -52,6 +52,11 @@
             <!-- filter -->
                 <div class="col-md-1 col-md-push-11 hidden-xs hidden-sm">
                     <div class="affix affix-top" style="width: 130px;">
+                        <div id="dc-nav" style="margin-top: 0px; float:none;" class="text-center dc-data-count"></div>
+                        <h2>Date range</h2>
+                        <p>
+                            <span id="filterFrom"> 2012-1 //</span><span id="filterTo"> 2015-12 </span>
+                        </p>
                         <h2>Searching &amp; filtering</h2>
                         <form class="form-inline">
                             <div class="form-group">
@@ -63,7 +68,6 @@
                                 </select>
                             </div>
                         </form>
-                        <div id="dc-nav" style="margin-top: 0px; float:none;" class="text-center dc-data-count"></div>
                         <hr>
                         <form class="form-inline">
                             <div class="form-group">
@@ -96,20 +100,14 @@
                             <p><a href="#" type="button" class="btn btn-sm btn-primary" onclick="Reset()">Reset filters</a></p>
                         </div>
                     </div>
-
                     <div class="row">
-                        <div class="col-sm-10">
+                        <div class="col-sm-12">
                             <h2>Activity</h2>
                             <div id="commitsChart"></div>
                             <div id="commitsHoursChart"></div>
                             <div id="commitsTZChart"></div>
                         </div>
-                        <div class="col-sm-2 text-right">
-                            <h2>Date range</h2>
-                            <p>
-                                <span id="filterFrom"> 2012-1-1 //</span><span id="filterTo"> 2015-12-31 </span>
-                            </p>
-                        </div>
+                        
                     </div>
 
                     <div class="row">
@@ -138,15 +136,12 @@
 
                     <div class="row collapse in" id="tables">
                         <div class="col-md-4">
-                            <h2>Repositories list</h2>
                             <table id="tableRepo" class="table table-hover dc-data-table"></table>
                         </div>
                         <div class="col-md-4">
-                            <h2>Organizations list</h2>
                             <table id="tableOrg" class="table table-hover dc-data-table"></table>
                         </div>
                         <div class="col-md-4">
-                            <h2>Contributors list</h2>
                             <table id="tableAuth" class="table table-hover dc-data-table"></table>
                         </div>
                         <div class="col-md-12 text-center">
@@ -163,7 +158,6 @@
 
                     <div class="row collapse in" id="commitTable">
                         <div class="col-sm-12">
-                            <h2>Commits list</h2>
                             <table id="table" class="table table-hover dc-data-table"></table>
                         </div>
                         <div class="col-sm-12 text-center">
@@ -194,8 +188,9 @@
         <script type="text/javascript" src="scripts/jquery-ui.min.js"></script>
         <script type="text/javascript" src="scripts/index.js"></script>
         <script type="text/javascript" src="scripts/PiesCharts.js"></script>
-        <script type="text/javascript" src="scripts/TablesCharts.js"></script>
+        <script type="text/javascript" src="scripts/tablesCharts.js"></script>
         <script type="text/javascript" src="scripts/TimeCharts.js"></script>
+        <script type="text/javascript" src="scripts/drawCharts.js"></script>
         <!-- endbuild -->
         <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
         <script>
